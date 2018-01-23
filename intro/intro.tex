@@ -2,13 +2,15 @@
 
 \newcommand{\setsize}{t}
 
-In this work we construct a NIZK proof system for the language
+In this work we construct a NIZK argument of knowledge (NIZK-AoK) for the language
 \[
 \mathsf{CircuitSat}:=\left\{
 	C : \exists \vecb{x}\in\Z_p^m \text{ s.t. } C \text{ is an algebraic circuit and } C(\vecb{x})=1
 	\right\},
 \]
 with proof size $\kappa+\Theta(\mathrm{depth}(C))$ elements of a bilinear group, where $\kappa$ is the size of a proof of knowledge of $\vecb{x}$. In the case of binary circuits, i.e.~$p=2$, we have that $\kappa=2|\vecb{x}|+O(1)$ using the techniques of \cite{AC:GonHevRaf15}. In general, $\kappa$ sould be independent from the circuit.
+%
+%We can equivalently see our result as what we call a \emph{conditonal} AoK (cAoK and NIZK-cAoK when it also has the NIZK properties). In a cAoK soundness is only guaranteed when one assumes that the adversary knows some secret $\vecb{x}$. This implies that now the 
 
 %We do so by constructing a QA-NIZK proof system for the language
 %\[
@@ -29,12 +31,28 @@ $$
 We work on asymmetric bilinear groups and our construction is built from the following primitives:
 \begin{enumerate}
 \item A commitment scheme for vectors in $\Z_q^m$ for wich we can construct a NIZK argument of knowledge of the opening.
-\item A commitment scheme for vectors in $\Z_q^m$ with constant-size commitments in $\GG_s^k$, $s=1,2$, for which we can construct a NIZK argument for the following language
+\item An homomorphic commitment scheme $\Com$ for vectors in $\Z_q^m$ and randomness in $\Z_q^r$ with (possibly) constant-size commitments in $\GG_s^k$, $s\in\{1,2\}$. Additionally we require that, whenever $k=m+r$, $\Com$ defines perfectly binding commitments.
+\item A QA-NIZK argument for the following language
+$$
+\mathcal{L}_{\mathsf{deg}\mbox{-}2,ck,ck'}(\vecb{p}):=\left\{[\vecb{c}]_s,[\vecb{c}']_s:
+\begin{array}{l}
+		\text{knowledge of } \vecb{x} \text{ s.t. }
+		{[\vecb{c}]_1=\Com_{ck}(\vecb{x})}
+		\Longrightarrow\\
+		\text{knowledge of }\vecb{y}\text{ s.t. }{[\vecb{c}']_1=\mathsf{Com}_{ck'}(\vecb{y})}\\
+		\text{and } \vecb{y}=\vecb{p}(\vecb{x})
+	\end{array}\right\},
+$$
+for some $\vecb{p}\in\Z_p^n[X_1,\ldots,X_m]$ of degree at most 2. In turn, this QA-NIZK argument is constructed from the follwing primitives:
+
+{\color{red} I don't know if it would be a good idea to introduce a notion of conditional argument (or proof) of knowledge, where the soundness reduction has access to an oppening of the commitments.}
+\begin{enumerate}
+\item A QA-NIZK argument for the following language
 $$
 \mathcal{L}_{\mathsf{prod},ck_1,ck_2}=\left\{[\vecb{a}]_1,[\vecb{b}]_2,[\vecb{c}]_1:
 	\begin{array}{c}
-		[\vecb{a}]_1=\mathsf{Com}_{ck_1}(\vecb{x})\text{ and }
-		[\vecb{b}]_2=\mathsf{Com}_{ck_2}(\vecb{y})\\
+		[\vecb{a}]_1=\mathsf{Com}_{ck_1}(\vecb{x})\text{ and}
+		{[\vecb{b}]_2=\mathsf{Com}_{ck_2}(\vecb{y})}\\
 		\Longrightarrow
 		[\vecb{c}]_1=\Com_{ck_3}(\vecb{x}\otimes\vecb{y})
 	\end{array}\right\},
@@ -60,6 +78,9 @@ $$
 	\end{array}\right\},
 $$
 \end{enumerate}
+\end{enumerate}
+
+\section{Technical Overview}
 
 \subsubsection{Constant-Size  Multiplicative Homomorphic Commitments.}
 Both Groth-Sahai and Pedersen commitments are special cases of the following general commitment scheme
@@ -99,21 +120,58 @@ $$
 $$
 However, the QA-NIZK argument only shows the existence of some $\vecb{w}$ such that $\vecb{c}\dsum\vecb{c}' = \matr{J}\vecb{w}$ but it might be the case that $\vecb{c}'$ still can't be oppened to $\vecb{x}$ --- i.e.~$\vecb{w}$ can't be $\vecb{x}$ appended with some other vector. We will show that this is not the case.
 
-Assume that $[\vecb{c}]_1 = \Com_{ck}(\vecb{x};\vecb{\rho})$ but $[\vecb{c}']_1\neq \Com_{ck'}(\vecb{x};\vecb{\rho}')$ for any $\vecb{\rho}'$, and assume also that the adversary provides a valid proof $[\pi]_1$ for $[\vecb{c}]\dsum[\vecb{c}']_1$. Define $[\vecb{c}^\dag]_1:=\Com_{ck'}(\vecb{x};\vecb{0})$ and note that $\vecb{c}\dsum\vecb{c}^\dag$ is in the immage of $\matr{J}$ and thus we can compute a proof $[\pi^\dag]_1$ for $[\vecb{c}]\dsum[\vecb{c}^\dag]_1$. By the properties of the QA-NIZK arguments for linear spaces, we get that $[\pi-\pi^\dag]_1$ is a proof for $[0]_1\dsum[\vecb{d}]_1$, where $\vecb{d}=\vecb{c}-\vecb{c}^\dag\neq \vecb{0}$. We will show that $\vecb{0}\dsum \vecb{d}$ is not in the immage of $\matr{J}'$, such that $[\matr{J}']_1$ is computationally indistinguishable from $[\matr{J}]_1$.
+Assume that $[\vecb{c}]_1 = \Com_{ck}(\vecb{x};\vecb{\rho})$ but $[\vecb{c}']_1\neq \Com_{ck'}(\vecb{x};\vecb{\rho}')$ for any $\vecb{\rho}'$, and assume also that the adversary provides a valid proof $[\pi]_1$ for $[\vecb{c}\dsum\vecb{c}']_1$. Given knowledge of $\vecb{x}$, we can compute $[\vecb{c}^\dag]_1:=\Com_{ck}(\vecb{x};\vecb{0})$ and $[\vecb{c}^\ddag]:=\Com_{ck'}(\vecb{x};\vecb{0})$, and note that $\vecb{c}^\dag\dsum\vecb{c}^\ddag$ is in the immage of $\matr{J}$ and thus we can compute a proof $[\pi^\dag]_1$ for $[\vecb{c}^\dag\dsum\vecb{c}^\ddag]_1$. By the properties of the QA-NIZK arguments for linear spaces, we get that $[\pi-\pi^\dag]_1$ is a proof for $[\vecb{d}^\dag\dsum\vecb{d}^\ddag]_1$, where
+$$[\vecb{d}^\dag]_1=[\vecb{c}-\vecb{c}^\dag]_1= \Com_{ck}(\vecb{0};\vecb{\rho})$$ and 
+$$[\vecb{d}^\ddag]_1 = [\vecb{c}'-\vecb{c}^\ddag]\neq\Com_{ck}(\vecb{0},\vecb{\rho}^\ddag)$$ for any $\vecb{\rho}^\ddag$.
+
+We will show that $\vecb{d}^\dag\dsum \vecb{d}^\ddag$ is not in the immage of $\matr{J}'$, such that $[\matr{J}']_1$ is computationally indistinguishable from $[\matr{J}]_1$.
 
 Let $\vecb{u}_0,\vecb{u}_1,\vecb{v}_0,\vecb{v}_1,\vecb{u}'_0,\vecb{u}'_1$ randomly chosen from $\Z_q^k$. We compute $\matr{J}'$ in the same way that $\matr{J}$ is computed, but now $ck_1,ck_2$ and $ck'$ are computed as follows
 \begin{align}
 &ck_1 = [\matr{G}_0|\matr{G}_1]_1 = [\vecb{u}_0\matr{A}_{0}|\vecb{u}_1\matr{A}_1]_1 \nonumber \\
 &ck_2 = [\matr{H}_0|\matr{H}_1]_2 = [\vecb{v}_0\matr{B}_{0}|\vecb{v}_1\matr{B}_1]_2 \nonumber \\
-&ck' =  [\matr{G}'_0|\matr{G}'_1]_1 = [\vecb{u}'_0\matr{A}_0\otimes\matr{B}_0 + \vecb{u}_1\matr{C}_0|\vecb{u}_1\matr{C}_1]_1 \label{eq:ck-dist}
+&ck' =  [\matr{G}'_0|\matr{G}'_1]_1 = [\vecb{u}'_0(\matr{A}_0\otimes\matr{B}_0) + \vecb{u}_1\matr{C}_0|\vecb{u}_1\matr{C}_1]_1 \label{eq:ck-dist}
 \end{align}
-since $[\vecb{u}]_s\mu$, $\mu\gets \Z_q$ is indistinguishable from a random element in $\GG_s^k$ as long as the DDH assumption is hard in $\GG_s$, it follows that the new commitment keys are indistinguishable from the original ones.
+since $[\vecb{u}]_s\mu$, $\mu\gets \Z_q$, is indistinguishable from a random element in $\GG_s^k$ as long as the DDH assumption is hard in $\GG_s$, it follows that the new commitment keys are indistinguishable from the original ones.
 
 There is still a technical problem when using the DDH assumption and computing $[\matr{J}]_1$: when using the DDH assumption in $\GG_2$ to change the distribution of $ck_2$ we can only compute $[\matr{J}]_2$. This problem has already arised and solved in \cite{AC:GonHevRaf15} and we use a similar solution in our final proof system. For the sake of clarity, for this intuitive explanation we just assume that $ck_1,ck_2$ and $ck'$ are sampled from (\ref{eq:ck-dist}) in the real game (although this will make impossible to prove zero-knowledge).
 
-Going back to the problem of whether $\vecb{0}\dsum \vecb{d}$ is in the immage of $\matr{J}$, we get that now this is not the case. Indeed, 
+Going back to the problem of whether $\vecb{d}^\dag\dsum \vecb{d}^\ddag$ is in the immage of $\matr{J}$, we get that now this is not the case. Indeed, define $\vecb{u}_{i,j}:=\vecb{u}_i\otimes\vecb{v}_j$, $i,j\in\bits$, and note that matrix $\matr{J}$ is equal to
+$$
+\begin{pmatrix}
+\vecb{u}_{0,0}(\matr{A}_0\otimes\matr{B}_0) & \vecb{u}_{0,1}(\matr{A}_0\otimes\matr{B}_1) & \vecb{u}_{1,0}(\matr{A}_1\otimes\matr{B}_0) & \vecb{u}_{1,1}(\matr{A}_1\otimes\matr{B}_1) & \vecb{0}\\
+\vecb{u}'_0(\matr{A}_0\otimes\matr{B}_0) +\vecb{u}'_1\matr{C}_0 & \vecb{0} & \vecb{0} & \vecb{0} & \vecb{u}'_1\matr{C}_1
+\end{pmatrix}
+$$
+and that $\vecb{d}^\dag\dsum\vecb{d}^\ddag$ can be written as
+$$
+\begin{pmatrix} \vecb{d}^\dag\\ \vecb{d}^\ddag \end{pmatrix}
+=
+\begin{pmatrix}
+\vecb{u}_{0,1}\mu_{0,1} + \vecb{u}_{1,0}\mu_{1,0} + \vecb{u}_{1,1}\mu_{1,1}\\
+\vecb{u}'_{0}\nu_{0} + \vecb{u}'_1\nu_1
+\end{pmatrix},
+\text{ where } \nu_0 \neq 0.
+$$
+Lets see that $\vecb{d}^\dag\dsum\vecb{d}^\ddag$ is not in the immage of $\matr{J}$ by showing that there aren't solutions to $\vecb{d}^\dag\dsum\vecb{d}^\ddag=\matr{J}(\vecb{w}_{0,0}\dsum\vecb{w}_{0,1}\dsum\vecb{w}_{1,0}\dsum\vecb{w}_{1,1}\dsum\vecb{w}_2)$. Indeed, suppose that
+\begin{align}
+\begin{pmatrix}
+\vecb{u}_{0,1}\mu_{0,1} + \vecb{u}_{1,0}\mu_{1,0} + \vecb{u}_{1,1}\mu_{1,1}\\
+\vecb{u}'_{0}\nu_{0} + \vecb{u}'_1\nu_1
+\end{pmatrix}
+=
+\begin{pmatrix}
+\sum_{i,j\in\bits}\vecb{u}_{i,j}(\matr{A}_i\otimes\matr{B}_j)\vecb{w}_{i,j}\\
+\vecb{u}_0(\matr{A}_0\otimes\matr{B}_0)\vecb{w}_{0,0} + \vecb{u}'_1\matr{C}_0\vecb{w}_{0,0}+\vecb{u}'_1\matr{C}_1\vecb{w}_2.
+\end{pmatrix}
+\label{eq:d-li}
+\end{align}
+Given that $\vecb{u}_{0,0}$ is linearly independetn from $\{\vecb{u}_{0,1},\vecb{u}_{1,0},\vecb{u}_{1,1}\}$ and that $\vecb{u}_{0,0}$ doesn't appear on the left side of the first row of equation (\ref{eq:d-li}), it must hold that $(\matr{A}\otimes\matr{B})\vecb{w}_{0,0}=\vecb{0}$. Then, the second row is reduced to
+$$
+\vecb{u}'_{0}\nu_{0} + \vecb{u}'_1w_0\nu_1 = \vecb{u}'_1(\matr{C}_0\vecb{w}_{0,0}+\matr{C}_1\vecb{w}_2).
+$$
+Since $\vecb{u}'_0$ is linearly independent from $\vecb{u}'_1$, it must hold that $\nu_0=0$ but this contradicts the fact that $\vecb{c}'\neq\Com_{ck'}(\vecb{x};\vecb{\rho}')$ for all $\vecb{\rho}'$. We conclude that $\vecb{d}^\dag\dsum\vecb{d}^\ddag$ is not in the immage of $\matr{J}$.
 \end{document}
-
 The first case is the more general form of a set-membership proof where the set is dynamically chosen. In the second case each instance of the proof system is fixed to a specific set (encoded in the CRS) and is the same notion of the proofs for ``fixed sets'' from Section \ref{sec:bits-applications}. We note that the aggregated set-membership proofs for $S\subset\GG_s$ from Chapter \ref{sec:shuf-rp} are proofs of membership in $\Lang_{ck,S}^n$.
 
 In Section \ref{sec:improved-aZKSMP-intuition}, we start with an intuitive description for the case $S\subset\Z_q$ without aggregation. We note that even in this simpler case, to the best of our knowledge, the shortest non-interactive proof, under falsifiable assumptions and without assuming anything about $S$,\footnote{If $S=[a,b]\subset\Z_q$ and $a<b$ we can use range proofs.} that exists in the literature is the one of Chandran et al.~of size $\Theta(\sqrt{|S|})$.
