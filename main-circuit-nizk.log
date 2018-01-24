@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 This is pdfTeX, Version 3.14159265-2.6-1.40.16 (MiKTeX 2.9 64-bit) (preloaded format=pdflatex 2016.1.7)  23 JAN 2018 21:38
 entering extended mode
 **./main-circuit-nizk.tex
@@ -1388,3 +1389,5 @@ PDF statistics:
  20 named destinations out of 1000 (max. 500000)
  21 words of extra memory for PDF output out of 10000 (max. 10000000)
 
+=======
+>>>>>>> edd73f541d47428759cdbeee5d7aa21c77966191
