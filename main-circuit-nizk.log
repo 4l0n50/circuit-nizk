@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.5.23)  24 JAN 2018 13:16
+=======
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.5.23)  22 JAN 2018 17:48
+>>>>>>> parent of d790905... asdad
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1323,6 +1327,7 @@ LaTeX Warning: Citation `EC:GroKoh15' on page 1 undefined on input line 25.
 [1
 
 {/usr/local/texlive/2017/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
+<<<<<<< HEAD
 
 LaTeX Warning: Reference `sec:shuffle' on page 2 undefined on input line 27.
 
@@ -1369,9 +1374,25 @@ Overfull \hbox (8.81956pt too wide) in paragraph at lines 109--109
 Overfull \hbox (18.90015pt too wide) in paragraph at lines 109--110
  [] 
  []
+=======
+Overfull \hbox (2.2094pt too wide) detected at line 61
+\OMS/cmsy/m/n/10 L \OT1/cmr/m/n/10 = [] \OML/cmm/m/it/10 ;
+ []
+
+
+Overfull \hbox (2.80132pt too wide) in paragraph at lines 65--66
+ []\OT1/cmr/bx/n/10 Constant-Size Mul-ti-plica-tive Ho-mo-mor-phic Com-mit-ment
+s.[] \OT1/cmr/m/n/10 Both Groth-
+ []
+
+
+LaTeX Font Warning: Font shape `U/wasy/b/n' in size <7> not available
+(Font)              Font shape `U/wasy/m/n' tried instead on input line 73.
+>>>>>>> parent of d790905... asdad
 
 [3]
 
+<<<<<<< HEAD
 LaTeX Warning: Reference `sec:ext-mp' on page 4 undefined on input line 117.
 
 [4]
@@ -1379,9 +1400,18 @@ LaTeX Warning: Reference `sec:ext-mp' on page 4 undefined on input line 117.
 LaTeX Warning: Reference `sec:aggcommit' on page 5 undefined on input line 165.
 
 
+=======
+LaTeX Font Warning: Font shape `U/wasy/b/n' in size <5> not available
+(Font)              Font shape `U/wasy/m/n' tried instead on input line 73.
+
+[2]
+
+LaTeX Warning: Citation `AC:GonHevRaf15' on page 3 undefined on input line 112.
+>>>>>>> parent of d790905... asdad
 
 LaTeX Warning: Reference `sec:concat' on page 5 undefined on input line 196.
 
+<<<<<<< HEAD
 [5]
 
 LaTeX Warning: Reference `sec:mddh' on page 6 undefined on input line 218.
@@ -1566,5 +1596,50 @@ PDF statistics:
  300 PDF objects out of 1000 (max. 8388607)
  249 compressed objects within 3 object streams
  54 named destinations out of 1000 (max. 500000)
+=======
+[3]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 115.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 115.
+ (./main-circuit-nizk.aux)
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 115.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 115.
+Package rerunfilecheck Info: File `main-circuit-nizk.out' has not changed.
+(rerunfilecheck)             Checksum: E79FA626CD65FEDA664A776155F1F193;86.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 115.
+ ) ) 
+Here is how much of TeX's memory you used:
+ 37752 strings out of 492995
+ 819808 string characters out of 6132704
+ 897248 words of memory out of 5000000
+ 40766 multiletter control sequences out of 15000+600000
+ 12756 words of font info for 50 fonts, out of 8000000 for 9000
+ 1141 hyphenation exceptions out of 8191
+ 57i,10n,71p,10416b,444s stack positions out of 5000i,500n,10000p,200000b,80000s
+</usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.p
+fb></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pf
+b></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx7.pfb>
+</usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx9.pfb></
+usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></u
+sr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></us
+r/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb></usr/
+local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/lo
+cal/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmmib10.pfb></usr/lo
+cal/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/loca
+l/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></usr/local/t
+exlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texl
+ive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/local/texlive
+/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmss10.pfb></usr/local/texlive/
+2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmss8.pfb></usr/local/texlive/20
+17/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/201
+7/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy5.pfb></usr/local/texlive/2017/
+texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2017/te
+xmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texlive/2017/tex
+mf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
+Output written on main-circuit-nizk.pdf (3 pages, 205189 bytes).
+PDF statistics:
+ 122 PDF objects out of 1000 (max. 8388607)
+ 96 compressed objects within 1 object stream
+ 14 named destinations out of 1000 (max. 500000)
+>>>>>>> parent of d790905... asdad
  21 words of extra memory for PDF output out of 10000 (max. 10000000)
 
