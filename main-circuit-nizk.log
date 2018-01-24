@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (MiKTeX 2.9 64-bit) (preloaded format=pdflatex 2016.1.7)  22 DEC 2017 01:43
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (MiKTeX 2.9 64-bit) (preloaded format=pdflatex 2016.1.7)  23 JAN 2018 21:38
 entering extended mode
 **./main-circuit-nizk.tex
 (main-circuit-nizk.tex
@@ -1292,289 +1292,99 @@ LaTeX Info: Redefining \nameref on input line 12.
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: End \AtBeginDocument code.
  (abstract.tex) (intro/intro.tex
-Overfull \hbox (12.4023pt too wide) detected at line 15
-[][] \OT1/cmr/m/n/10 := [] \OML/cmm/m/it/10 ;
- []
 
-
-LaTeX Warning: Reference `sec:bits-applications' on page 1 undefined on input l
-ine 18.
-
-
-LaTeX Warning: Reference `sec:shuf-rp' on page 1 undefined on input line 18.
-
-
-LaTeX Warning: Reference `sec:improved-aZKSMP-intuition' on page 1 undefined on
- input line 20.
-
-LaTeX Font Info:    Font shape `U/lasy/b/n' in size <9> not available
-(Font)              Font shape `U/lasy/m/n' tried instead on input line 20.
-LaTeX Font Info:    Font shape `U/lasy/b/n' in size <6> not available
-(Font)              Font shape `U/lasy/m/n' tried instead on input line 20.
-
-LaTeX Warning: Reference `sec:ext-mp' on page 1 undefined on input line 21.
-
-
-LaTeX Warning: Reference `sec:agg-asym' on page 1 undefined on input line 21.
-
-
-LaTeX Warning: Reference `sec:bits' on page 1 undefined on input line 21.
-
-
-LaTeX Warning: Reference `sec:log-set-memb-Z' on page 1 undefined on input line
- 24.
-
-
-LaTeX Warning: Reference `sec:improved-aZKSMP-intuition' on page 1 undefined on
- input line 24.
-
-
-LaTeX Warning: Reference `sec:bits' on page 1 undefined on input line 24.
-
-
-LaTeX Warning: Reference `sec:shuf-rp' on page 1 undefined on input line 24.
-
-
-LaTeX Warning: Citation `EC:GroKoh15' on page 1 undefined on input line 25.
+LaTeX Warning: Citation `AC:GonHevRaf15' on page 1 undefined on input line 11.
 
 [1
 
 {C:/Users/Letizia/AppData/Local/MiKTeX/2.9/pdftex/config/pdftex.map}]
-
-LaTeX Warning: Reference `sec:shuffle' on page 2 undefined on input line 27.
-
-) (intro/intuition.tex
-
-LaTeX Warning: Reference `sec:log-set-memb-Z' on page 2 undefined on input line
- 35.
-
-
-Overfull \hbox (17.04219pt too wide) in paragraph at lines 35--36
-[]\OT1/cmr/m/n/10 without ag-gre-ga-tion, that is, there is a sin-gle com-mit-m
-ent $[\OML/cmm/b/it/10 c\OT1/cmr/m/n/10 ][] = []\OML/cmm/m/it/10 :[][]\OT1/cmr/
-m/n/10 (\OML/cmm/m/it/10 x\OT1/cmr/m/n/10 ; \OML/cmm/m/it/10 r\OT1/cmr/m/n/10 )
-$
+Overfull \hbox (5.2872pt too wide) detected at line 59
+\OMS/cmsy/m/n/10 L[] \OT1/cmr/m/n/10 = [] \OML/cmm/m/it/10 ;
  []
 
 
-LaTeX Warning: Reference `sec:aZKSMP' on page 2 undefined on input line 37.
-
-
-LaTeX Warning: Reference `sec:aZKSMP' on page 2 undefined on input line 38.
-
-
-LaTeX Warning: Citation `ICALP:ChaGroSah07' on page 2 undefined on input line 3
-8.
-
-
-LaTeX Warning: Reference `sec:bits-applications' on page 2 undefined on input l
-ine 38.
-
-[2]
-Overfull \hbox (11.81682pt too wide) in paragraph at lines 87--88
-\OT1/cmr/m/n/10 are the leaves of the sub-tree un-der the path $(\OML/cmm/m/it/
-10 b[]; b[]\OT1/cmr/m/n/10 )$. For ex-am-ple, if $(\OML/cmm/m/it/10 b[]; b[]\OT
-1/cmr/m/n/10 ) =$
+Overfull \hbox (5.37567pt too wide) in paragraph at lines 59--61
+\OT1/cmr/m/n/10 where $\OML/cmm/b/it/10 x \OMS/cmsy/m/n/10 2 \U/msb/m/n/10 Z[]\
+OML/cmm/m/it/10 ; \OML/cmm/b/it/10 y \OMS/cmsy/m/n/10 2 \U/msb/m/n/10 Z[]\OML/c
+mm/m/it/10 ; \OML/cmm/b/it/10 x \OMS/cmsy/m/n/10 
+ \OML/cmm/b/it/10 y \OMS/cmsy/m/n/10 2 \U/msb/m/n/10 Z[]$\OT1/cmr/m/n/10 , $\OM
+L/cmm/m/it/10 ck[] \OT1/cmr/m/n/10 = \OML/cmm/m/it/10 ck[] \OMS/cmsy/m/n/10 
+ \OML/cmm/m/it/10 ck[] \OMS/cmsy/m/n/10 2 \U/msb/m/n/10 G[]$\OT1/cmr/m/n/10 ,
  []
 
 
-Overfull \hbox (8.81956pt too wide) in paragraph at lines 109--109
-[]$\OML/cmm/m/it/5 s[] [] s[]$ 
+Overfull \hbox (19.2094pt too wide) detected at line 79
+\OMS/cmsy/m/n/10 L \OT1/cmr/m/n/10 = [] \OML/cmm/m/it/10 ;
  []
 
 
-Overfull \hbox (18.90015pt too wide) in paragraph at lines 109--110
- [] 
+Overfull \hbox (2.80132pt too wide) in paragraph at lines 86--87
+ []\OT1/cmr/bx/n/10 Constant-Size Mul-ti-plica-tive Ho-mo-mor-phic Com-mit-ment
+s.[] \OT1/cmr/m/n/10 Both Groth-
  []
 
-[3]
-
-LaTeX Warning: Reference `sec:ext-mp' on page 4 undefined on input line 117.
-
-[4]
-
-LaTeX Warning: Reference `sec:aggcommit' on page 5 undefined on input line 165.
-
-
-
-LaTeX Warning: Reference `sec:concat' on page 5 undefined on input line 196.
-
-[5]
-
-LaTeX Warning: Reference `sec:mddh' on page 6 undefined on input line 218.
-
-[6]
-Overfull \hbox (23.53018pt too wide) in paragraph at lines 247--247
-[] 
- []
-
-) (scheme/scheme.tex [7]
-Overfull \hbox (1.96472pt too wide) in paragraph at lines 21--21
-[] 
- []
-
-
-LaTeX Warning: Reference `sec:bits' on page 8 undefined on input line 40.
-
-
-LaTeX Warning: Reference `sec:bits-intuition' on page 8 undefined on input line
- 49.
-
-[8] [9]
-
-LaTeX Warning: Reference `sec:aggcommit' on page 10 undefined on input line 102
-.
-
-
-Overfull \hbox (34.6793pt too wide) in paragraph at lines 112--114
-[]\OT1/cmr/m/n/10 Parse $\OML/cmm/m/it/10 ck[]$ \OT1/cmr/m/n/10 as $[\OML/cmm/b
-/it/10 u[]\OMS/cmsy/m/n/10 j[]\OT1/cmr/m/n/10 ][]$. For each $\OML/cmm/m/it/10 
-` \OMS/cmsy/m/n/10 2 \OT1/cmr/m/n/10 [\OML/cmm/m/it/10 m\OT1/cmr/m/n/10 ]$ let 
-$\OT1/cmr/bx/n/10 G[] \OT1/cmr/m/n/10 := \OT1/cmr/bx/n/10 G[]\OMS/cmsy/m/n/10 j
- [] j\OT1/cmr/bx/n/10 G[]\OMS/cmsy/m/n/10 j\OML/cmm/b/it/10 g[] \OMS/cmsy/m/n/1
-0  $
- []
-
-
-LaTeX Warning: Reference `sec:sum' on page 10 undefined on input line 135.
-
-
-LaTeX Warning: Reference `sect:QANIZKlinspace' on page 10 undefined on input li
-ne 135.
-
-
-LaTeX Warning: Reference `sec:matr-bits' on page 10 undefined on input line 135
-.
-
-
-LaTeX Warning: Reference `sec:aggcommit' on page 10 undefined on input line 136
-.
-
-[10]
-Overfull \hbox (4.76062pt too wide) in paragraph at lines 162--163
-[]\OT1/cmr/m/n/10 The prover com-pute com-
- []
-
-[11]
-Overfull \hbox (5.22795pt too wide) in paragraph at lines 189--191
-[]\OT1/cmr/m/n/10 Let $[\OML/cmm/b/it/10 c[]\OT1/cmr/m/n/10 ][] := []\OML/cmm/m
-/it/10 :[][]\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 s[]; [] ; s[]\OT1/cmr/m/n/10 ; 0)
-\OML/cmm/m/it/10 ; \OT1/cmr/m/n/10 [\OML/cmm/b/it/10 c[]\OT1/cmr/m/n/10 ] :=$
- []
-
-
-Overfull \hbox (6.57986pt too wide) in paragraph at lines 215--216
- []\OT1/cmr/bx/n/10 Completeness[] \OT1/cmr/m/n/10 Com-plete-ness fol-lows from
- com-plete-ness of $\OML/cmm/m/it/10 []; []; []; []$\OT1/cmr/m/n/10 ,
- []
-
-
-Overfull \hbox (10.60951pt too wide) in paragraph at lines 232--232
-[] 
- []
-
-
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
- [12]
-[13]
-Overfull \hbox (10.3837pt too wide) in paragraph at lines 282--284
-[]\OT1/cmr/m/it/10 There ex-ists a $\OMS/cmsy/m/n/10 L[]$\OT1/cmr/m/it/10 -$[][
-]$ ad-ver-sary $\OT1/cmss/m/n/10 D[]$ \OT1/cmr/m/it/10 such that $\OMS/cmsy/m/n
-/10 j [] []$
- []
-
-[14]
-Overfull \hbox (27.08208pt too wide) in paragraph at lines 301--303
-[]\OT1/cmr/m/it/10 There ex-ists an ad-ver-sary $\OT1/cmss/m/n/10 B[]$ \OT1/cmr
-/m/it/10 against $\OML/cmm/m/it/10 []$ \OT1/cmr/m/it/10 such that $[] [] \OMS/
-cmsy/m/n/10 $
- []
-
-
-Overfull \hbox (10.3837pt too wide) in paragraph at lines 311--315
-[]\OT1/cmr/m/it/10 There ex-ists a $\OMS/cmsy/m/n/10 L[]$\OT1/cmr/m/it/10 -$[][
-]$ ad-ver-sary $\OT1/cmss/m/n/10 D[]$ \OT1/cmr/m/it/10 such that $\OMS/cmsy/m/n
-/10 j [] []$
- []
-
-
-Overfull \hbox (14.51857pt too wide) in paragraph at lines 332--334
-\OT1/cmr/m/n/10 are bases of $\U/msb/m/n/10 Z[]$\OT1/cmr/m/n/10 , and, for each
- $\OML/cmm/m/it/10 ` \OMS/cmsy/m/n/10 2 \OT1/cmr/m/n/10 [\OML/cmm/m/it/10 m\OT1
-/cmr/m/n/10 ]\OML/cmm/m/it/10 ;  \OMS/cmsy/m/n/10 2 f\OT1/cmr/m/n/10 1\OML/cmm
-/m/it/10 ; \OT1/cmr/m/n/10 2\OMS/cmsy/m/n/10 g$\OT1/cmr/m/n/10 , we can de-fine
- $[]\OML/cmm/m/it/10 ; []; []; []; b[]; []$
- []
-
-[15]
-Overfull \hbox (18.31516pt too wide) in paragraph at lines 368--368
-[] 
- []
-
-[16]
 
 LaTeX Font Warning: Font shape `U/wasy/b/n' in size <7> not available
-(Font)              Font shape `U/wasy/m/n' tried instead on input line 398.
+(Font)              Font shape `U/wasy/m/n' tried instead on input line 94.
 
 
 LaTeX Font Warning: Font shape `U/wasy/b/n' in size <5> not available
-(Font)              Font shape `U/wasy/m/n' tried instead on input line 398.
+(Font)              Font shape `U/wasy/m/n' tried instead on input line 94.
 
-)
-No file main-circuit-nizk.bbl.
-[17]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 38.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 38.
+[2]
+
+LaTeX Warning: Citation `AC:GonHevRaf15' on page 3 undefined on input line 137.
+
+
+LaTeX Font Info:    Font shape `U/lasy/b/n' in size <9> not available
+(Font)              Font shape `U/lasy/m/n' tried instead on input line 137.
+LaTeX Font Info:    Font shape `U/lasy/b/n' in size <6> not available
+(Font)              Font shape `U/lasy/m/n' tried instead on input line 137.
+[3]
+Overfull \hbox (7.3554pt too wide) in paragraph at lines 168--168
+[] 
+ []
+
+[4]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 174.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 174.
  (main-circuit-nizk.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 38.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 38.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 174.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 174.
 Package rerunfilecheck Info: File `main-circuit-nizk.out' has not changed.
 (rerunfilecheck)             Checksum: 111349F26D4D82D1BED2C3F8A65AB767;87.
-
-
-LaTeX Warning: There were undefined references.
-
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 38.
- ) 
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 174.
+ ) ) 
 Here is how much of TeX's memory you used:
- 41112 strings out of 493634
- 878221 string characters out of 3143739
- 943887 words of memory out of 3000000
- 43905 multiletter control sequences out of 15000+200000
+ 38528 strings out of 493634
+ 835620 string characters out of 3143739
+ 916369 words of memory out of 3000000
+ 41363 multiletter control sequences out of 15000+200000
  544976 words of font info for 80 fonts, out of 3000000 for 9000
  1025 hyphenation exceptions out of 8191
- 154i,21n,179p,10418b,2355s stack positions out of 5000i,500n,10000p,200000b,50000s
-<C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbsy10.pfb><C:/P
-rogram Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx10.pfb><C:/Program F
-iles/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Program Files/MiK
-TeX 2.9/fonts/type1/public/amsfonts/cm/cmbx7.pfb><C:/Program Files/MiKTeX 2.9/f
-onts/type1/public/amsfonts/cm/cmbx9.pfb><C:/Program Files/MiKTeX 2.9/fonts/type
-1/public/amsfonts/cm/cmex10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public
-/amsfonts/cmextra/cmex9.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/ams
-fonts/cm/cmmi10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm
-/cmmi5.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi6.pf
-b><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi7.pfb><C:/Pro
-gram Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi9.pfb><C:/Program File
-s/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmib10.pfb><C:/Program Files/MiKTe
-X 2.9/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Program Files/MiKTeX 2.9/fon
-ts/type1/public/amsfonts/cm/cmr5.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/p
-ublic/amsfonts/cm/cmr6.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsf
-onts/cm/cmr7.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cm
-r9.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmss10.pfb><
-C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmss8.pfb><C:/Progra
-m Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmss9.pfb><C:/Program Files/M
-iKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Program Files/MiKTeX 2.
-9/fonts/type1/public/amsfonts/cm/cmsy5.pfb><C:/Program Files/MiKTeX 2.9/fonts/t
-ype1/public/amsfonts/cm/cmsy6.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/publ
-ic/amsfonts/cm/cmsy7.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfon
-ts/cm/cmsy9.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmt
-i10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/symbols/msbm10
-.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/symbols/msbm7.pfb
->
-Output written on main-circuit-nizk.pdf (17 pages, 412801 bytes).
+ 57i,15n,71p,10418b,463s stack positions out of 5000i,500n,10000p,200000b,50000s
+<C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx10.pfb><C:/
+Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Program 
+Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx7.pfb><C:/Program Files/MiK
+TeX 2.9/fonts/type1/public/amsfonts/cm/cmbx9.pfb><C:/Program Files/MiKTeX 2.9/f
+onts/type1/public/amsfonts/cm/cmex10.pfb><C:/Program Files/MiKTeX 2.9/fonts/typ
+e1/public/amsfonts/cm/cmmi10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/publi
+c/amsfonts/cm/cmmi5.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfont
+s/cm/cmmi7.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi
+b10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr10.pfb><
+C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr5.pfb><C:/Program
+ Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr6.pfb><C:/Program Files/MiK
+TeX 2.9/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Program Files/MiKTeX 2.9/fo
+nts/type1/public/amsfonts/cm/cmr9.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/
+public/amsfonts/cm/cmss10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/a
+msfonts/cm/cmss8.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/c
+m/cmsy10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy5.
+pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy7.pfb><C:/P
+rogram Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmti10.pfb><C:/Program F
+iles/MiKTeX 2.9/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
+Output written on main-circuit-nizk.pdf (4 pages, 241264 bytes).
 PDF statistics:
- 296 PDF objects out of 1000 (max. 8388607)
- 54 named destinations out of 1000 (max. 500000)
+ 136 PDF objects out of 1000 (max. 8388607)
+ 20 named destinations out of 1000 (max. 500000)
  21 words of extra memory for PDF output out of 10000 (max. 10000000)
 
