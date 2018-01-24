@@ -3,3 +3,10 @@
 *.out
 *.pdf
 *.gz
+*.aux
+*.aux
+main-circuit-nizk.aux
+main-circuit-nizk.aux
+*.log
+*.pdf
+main-circuit-nizk.synctex.gz
