@@ -1,20 +1,177 @@
+% !TEX root = ../main-circuit-nizk.tex
+
 \newcommand{\setsize}{t}
 
-In this work we construct a NIZK proof system for the language
+In this work we construct a NIZK argument of knowledge (NIZK-AoK) for the language
 \[
 \mathsf{CircuitSat}:=\left\{
-	C : \exists x\in\bits^* \text{ s.t. } C(x)=1
+	C : \exists \vecb{x}\in\Z_p^m \text{ s.t. } C \text{ is an algebraic circuit and } C(\vecb{x})=1
 	\right\},
 \]
-with proof size $2|x|+\Theta(\mathrm{depth}(C))$ elements of a bilinear group. We do so by constructing a QA-NIZK proof system for the language
-\[
-\mathsf{CircuitSat}_{ck}:=\left\{\begin{array}{l}
-([\grkb{\zeta}_1]_1,\ldots,[\grkb{\zeta}_n]_1,C):\exists x_1,\ldots,x_n\in\bits,w_1,\ldots,w_n\in\Z_q \text{ s.t. } \\
-C(x)=1 \text{ and } \forall i\in [n]\ [\grkb{\zeta}_i]_1=\GS.\Com_{ck}([x_i]_1;w_i)
-\end{array}\right\},
-\]
-with proof size $\Theta(\mathrm{depth}(C))$.
+with proof size $\kappa+\Theta(\mathrm{depth}(C))$ elements of a bilinear group, where $\kappa$ is the size of a proof of knowledge of $\vecb{x}$. In the case of binary circuits, i.e.~$p=2$, we have that $\kappa=2|\vecb{x}|+O(1)$ using the techniques of \cite{AC:GonHevRaf15}. In general, $\kappa$ sould be independent from the circuit.
+%
+%We can equivalently see our result as what we call a \emph{conditonal} AoK (cAoK and NIZK-cAoK when it also has the NIZK properties). In a cAoK soundness is only guaranteed when one assumes that the adversary knows some secret $\vecb{x}$. This implies that now the 
 
+%We do so by constructing a QA-NIZK proof system for the language
+%\[
+%\mathsf{CircuitSat}_{ck}:=\left\{\begin{array}{l}
+%([\grkb{\zeta}_1]_1,\ldots,[\grkb{\zeta}_n]_1,C):\exists x_1,\ldots,x_n\in\Z_q,\rho_1,\ldots,\rho_n\in\Z_q \text{ s.t. } \\
+%C(x)=1 \text{ and } \forall i\in [n]\ [\grkb{\zeta}_i]_1=\GS.\Com_{ck}([x_i]_1;\rho_i)
+%\end{array}\right\},
+%\]
+%with proof size $\Theta(\mathrm{depth}(C))$.
+
+We organize the circuit gates by level, where level $\ell$ is formed by the gates at distance $\ell$ from the output gate. For example, the $d$-th level, where $d:=\mathrm{depth}({C})$, contain the gates whose inputs are only elements from the circuit input $\vecb{x}$ and the $0$-th level contains the unique gate whose output is the output of the circuit.
+
+To each level we might associate a vector of degree 2 polynomials $\vecb{p}_\ell \in \Z_q^{n_\ell}[W_1,\ldots,W_{m_\ell}]$, where $m_\ell\in\mathbb{N}$ is the number of inputs of level $\ell$ and $n_\ell\in\mathbb{N}$ is the number of outputs (or, equivalently the number of gates) of level $\ell$. Note that it must hold that $\sum_{i<\ell} n_i\geq m_\ell \geq n_{\ell-1}$ ({\color{red} TODO: Check this}) and that it must hold that for every $\vecb{x}\in\Z_p^m$
+$$
+C(\vecb{x}) = (\vecb{p}_{d}\circ\vecb{p}_{d-1}\circ\ldots\circ \vecb{p}_0) (\vecb{x}) \text{  \color{red} TODO: I need to add id gates}
+$$
+
+We work on asymmetric bilinear groups and our construction is built from the following primitives:
+\begin{enumerate}
+\item A commitment scheme for vectors in $\Z_q^m$ for wich we can construct a NIZK argument of knowledge of the opening.
+\item An homomorphic commitment scheme $\Com$ for vectors in $\Z_q^m$, randomness in $\Z_q^r$, and commitment keys in $\GG_s^{k\times(m+r)}$ with (possibly) constant-size commitments in $\GG_s^k$, $s\in\{1,2\}$. Additionally we require that, whenever $k=m+r$, $\Com$ defines perfectly binding commitments.
+\item A constant size QA-NIZK argument for the following language
+$$
+\mathcal{L}_{\mathsf{deg}\mbox{-}2,ck,ck'}(\vecb{p}):=\left\{[\vecb{c}]_s,[\vecb{c}']_s:
+\begin{array}{l}
+		\text{knowledge of } \vecb{x} \text{ s.t. }
+		{[\vecb{c}]_1=\Com_{ck}(\vecb{x})}
+		\Longrightarrow\\
+		\text{knowledge of }\vecb{y}\text{ s.t. }{[\vecb{c}']_1=\mathsf{Com}_{ck'}(\vecb{y})}\\
+		\text{and } \vecb{y}=\vecb{p}(\vecb{x})
+	\end{array}\right\},
+$$
+for some $\vecb{p}\in\Z_p^n[X_1,\ldots,X_m]$ of degree at most 2. In turn, this QA-NIZK argument is constructed from the follwing primitives:
+
+{\color{red} I don't know if it would be a good idea to introduce a notion of conditional argument (or proof) of knowledge, where the soundness reduction has access to an oppening of the commitments.}
+\begin{enumerate}
+\item A QA-NIZK argument for the following language
+$$
+\mathcal{L}_{\mathsf{prod},ck_1,ck_2}=\left\{[\vecb{a}]_1,[\vecb{b}]_2,[\vecb{c}]_1:
+	\begin{array}{c}
+		[\vecb{a}]_1=\mathsf{Com}_{ck_1}(\vecb{x})\text{ and}
+		{[\vecb{b}]_2=\mathsf{Com}_{ck_2}(\vecb{y})}\\
+		\Longrightarrow
+		[\vecb{c}]_1=\Com_{ck_3}(\vecb{x}\otimes\vecb{y})
+	\end{array}\right\},
+$$
+where $\vecb{x}\in\Z_q^m,\vecb{y}\in\Z_q^n,\vecb{x}\otimes\vecb{y}\in\Z_q^{mn}$, $ck_3=ck_1\otimes ck_2\in\GG_T^{k_1k_2\times(m+r_1)(n+r_2)}$, and $\otimes$ denote the kroenecker product between matrices with entries in $\Z_q$ or $\GG_s$, where multiplication is replace by the pairing function $e$ when necessary (the commitment keys are matrices of group elements).
+\item A QA-NIZK argument for the language
+$$
+\mathcal{L} = \left\{[\vecb{c}]_1,[\vecb{c}']_1:
+	\begin{array}{l} \text{knowledge of } \vecb{x} \text{ s.t. }
+		{[\vecb{c}]_1=\Com_{ck_1\otimes ck_2}(\vecb{x})}
+		\Longrightarrow\\
+		{[\vecb{c}']_1=\mathsf{Com}_{ck'}(\vecb{x})}
+	\end{array}\right\},
+$$
+\item A QA-NIZK argument for the language
+$$
+\mathcal{L} = \left\{[\vecb{c}]_1,[\vecb{a}']_1,[\vecb{b}']_2:
+	\begin{array}{l}
+		\text{knowledge of } \vecb{x} \text{ s.t. }[\vecb{c}]_1=\Com_{ck}(\vecb{x})\\
+		\Longrightarrow
+		[\vecb{a}']_1=\mathsf{Com}_{ck_1}(\matr{\Gamma}_1\vecb{x})\text{ and }
+		[\vecb{b}']_2=\mathsf{Com}_{ck_2}(\matr{\Gamma}_2\vecb{x})
+	\end{array}\right\},
+$$
+\end{enumerate}
+\end{enumerate}
+
+\section{Technical Overview}
+
+\subsubsection{Constant-Size  Multiplicative Homomorphic Commitments.}
+Both Groth-Sahai and Pedersen commitments are special cases of the following general commitment scheme
+$$
+ck:=[\matr{G}]_s=[\matr{G}_0|\matr{G}_1]\in\GG_s^{k\times (n+r)}, \quad \mathsf{Com}_{ck}(\vecb{x};\vecb{\rho})=[\matr{G}_0]_s\vecb{x}+[\matr{G}_1]_s\vecb{\rho}.
+$$
+Groth-Sahai commitments correspond to the case $k=n+r$, which defines perfectly binding commitments if $\matr{G}$ is invertible, and Pedersen commitments correspond to the case $k=1$, which defines perfectly hiding commitments. We will consider the case $k>1$ which has been called \emph{somewhere statiscally binding} commitments and is a mixture between Groth-Sahai and Pedersen commitments.
+
+With this formulation is easy to derive commitments to $\vecb{x}\otimes\vecb{y}$ from commitments to $\vecb{x}\in\Z_q^m$ and $\vecb{y}\in\Z_q^n$, as follows
+$$
+\Com_{ck_3}(\vecb{\vecb{x}}\otimes\vecb{y};\vecb{\rho}_3):=\Com_{ck_1}(\vecb{x};\vecb{\rho}_1)\otimes\Com_{ck_2}(\vecb{y};\vecb{\rho}_2),
+$$
+where $ck_2:=[\matr{H}_0|\matr{H}_2]_1,ck_3=[\matr{G}\otimes\matr{H}]_T$ and
+$$\vecb{\rho}_3=\pmatri{\vecb{0}_m\\\vecb{\rho}_1}\otimes\pmatri{\vecb{y}\\\frac{1}{2}\vecb{\rho}_2}+\pmatri{\vecb{x}\\\frac{1}{2}\vecb{\rho}_1}\otimes\pmatri{\vecb{0}_n\\\vecb{\rho}_2}$$ ($\vecb{\rho_3}$ has a different form?).
+
+This approach has the disadvantage that once we compute $[\vecb{c}]_T=\Com_{ck_3}(\vecb{x}\otimes\vecb{y})$ we are stucked in the target group and no more multiplications are possible. But one can still \emph{bootstrap} commitment $[\vecb{c}]_T$ (in some analogy with FHE techniques)  by bringing it to one of the base groups $\GG_s$ and requiring the verifier to check that
+$$
+e([\vecb{a}]_1,[\vecb{b}]_2)=e([\vecb{c}]_s,[\matr{I}]_{2-s+1}).
+$$
+%
+%Going a step forward, we will have to give two shares of $[\vecb{c}]_s$,  $[\vecb{c}']_1$ and $[\vecb{d}']_2$, such that $\vecb{c}=\vecb{c}'+\vecb{d}'$. We omit the ``primes'' in the shares and now the verifier checks that
+%$$
+%e([\vecb{a}]_1,[\vecb{b}]_2)=e([\vecb{c}]_1,[\matr{I}]_{2}) + e([\matr{I}]_{1},[\vecb{d}]_2).
+%$$
+%
+%The first share is computed using commitment key $ck_{3,1} := [\matr{G}\otimes\matr{H}-\matr{Z}]_1$ and the second share is computed using commitment key $ck_{3,1} := [\matr{Z}]_2$, for $\matr{Z}\gets\Z_q^{k_1k_2\times mn}$.
+
+\subsubsection{Arguments of Equal Opening.} Given $[\vecb{c}]_1=\Com_{ck}(\vecb{x};\vecb{\rho})$, where $ck = ck_1\otimes ck_2$, we want to show that $[\vecb{c}']_1$ can be also oppened to $\vecb{x}$ but $ck'$ is a random commitment key.
+
+To do so we will give a QA-NIZK argument that $\vecb{c}\dsum\vecb{c}'$ is in the linear span of
+$$
+\matr{J}:=
+\begin{pmatrix}
+\matr{G}_0\otimes\matr{H}_0 & \matr{G}_0\otimes\matr{H}_1 & \matr{G}_1\otimes\matr{H}_0& \matr{G}_1\otimes\matr{H}_1 & \matr{0}\\
+\matr{G}'_0 & \matr{0} & \matr{0} & \matr{0} & \matr{G}'_0 
+\end{pmatrix}
+$$
+However, the QA-NIZK argument only shows the existence of some $\vecb{w}$ such that $\vecb{c}\dsum\vecb{c}' = \matr{J}\vecb{w}$ but it might be the case that $\vecb{c}'$ still can't be oppened to $\vecb{x}$ --- i.e.~$\vecb{w}$ can't be $\vecb{x}$ appended with some other vector. We will show that this is not the case when there is some extractor that extracts $\vecb{x}$ from the proof.
+
+Assume that $[\vecb{c}]_1 = \Com_{ck}(\vecb{x};\vecb{\rho})$ but $[\vecb{c}']_1\neq \Com_{ck'}(\vecb{x};\vecb{\rho}')$ for any $\vecb{\rho}'$, and assume also that the adversary provides a valid proof $[\pi]_1$ for $[\vecb{c}\dsum\vecb{c}']_1$. Given knowledge of $\vecb{x}$, we can compute $[\vecb{c}^\dag]_1:=\Com_{ck}(\vecb{x};\vecb{0})$ and $[\vecb{c}^\ddag]:=\Com_{ck'}(\vecb{x};\vecb{0})$, and note that $\vecb{c}^\dag\dsum\vecb{c}^\ddag$ is in the immage of $\matr{J}$ and thus we can compute a proof $[\pi^\dag]_1$ for $[\vecb{c}^\dag\dsum\vecb{c}^\ddag]_1$. By the properties of the QA-NIZK arguments for linear spaces, we get that $[\pi-\pi^\dag]_1$ is a proof for $[\vecb{d}^\dag\dsum\vecb{d}^\ddag]_1$, where
+$$[\vecb{d}^\dag]_1=[\vecb{c}-\vecb{c}^\dag]_1= \Com_{ck}(\vecb{0};\vecb{\rho})$$ and 
+$$[\vecb{d}^\ddag]_1 = [\vecb{c}'-\vecb{c}^\ddag]\neq\Com_{ck}(\vecb{0},\vecb{\rho}^\ddag)$$ for any $\vecb{\rho}^\ddag$.
+
+We will show that $\vecb{d}^\dag\dsum \vecb{d}^\ddag$ is not in the immage of $\matr{J}'$, such that $[\matr{J}']_1$ is computationally indistinguishable from $[\matr{J}]_1$.
+
+Let $\vecb{u}_0,\vecb{u}_1,\vecb{v}_0,\vecb{v}_1,\vecb{u}'_0,\vecb{u}'_1$ randomly chosen from $\Z_q^k$. We compute $\matr{J}$ as before but now $ck_1,ck_2$ and $ck'$ are computed as follows
+\begin{align}
+&ck_1 = [\matr{G}_0|\matr{G}_1]_1 = [\vecb{u}_0\matr{A}_{0}|\vecb{u}_1\matr{A}_1]_1 \nonumber \\
+&ck_2 = [\matr{H}_0|\matr{H}_1]_2 = [\vecb{v}_0\matr{B}_{0}|\vecb{v}_1\matr{B}_1]_2 \nonumber \\
+&ck' =  [\matr{G}'_0|\matr{G}'_1]_1 = [\vecb{u}'_0(\matr{A}_0\otimes\matr{B}_0) + \vecb{u}_1\matr{C}_0|\vecb{u}_1\matr{C}_1]_1 \label{eq:ck-dist}
+\end{align}
+since $[\vecb{u}]_s\mu$, $\mu\gets \Z_q$, is indistinguishable from a random element in $\GG_s^k$ --- as long as the DDH assumption is hard in $\GG_s$ --- it follows that the new commitment keys are indistinguishable from the original ones.
+
+There is still a technical problem with this approach: when using the DDH assumption in $\GG_2$ to change the distribution of $ck_2$ we can only compute $[\matr{J}]_2$ while we need to compute $[\matr{J}]_1$ to carry on the soundness proof. This problem has already arised and solved in \cite{AC:GonHevRaf15} and we use a similar solution in our final proof system. For the sake of clarity, for this intuitive explanation we just assume that $ck_1,ck_2$ and $ck'$ are sampled from (\ref{eq:ck-dist}) in the real game (although this will render impossible to prove zero-knowledge).\footnote{With symmetric bilinear groups this problen doesn't even exists, and in the soundness proof we might change $[\matr{J}]_1$ distribution without any problem.}
+
+Going back to the problem of whether $\vecb{d}^\dag\dsum \vecb{d}^\ddag$ is in the immage of $\matr{J}$, we get that now this is not the case. Indeed, define $\vecb{u}_{i,j}:=\vecb{u}_i\otimes\vecb{v}_j$, $i,j\in\bits$, and note that matrix $\matr{J}$ is equal to
+$$
+\begin{pmatrix}
+\vecb{u}_{0,0}(\matr{A}_0\otimes\matr{B}_0) & \vecb{u}_{0,1}(\matr{A}_0\otimes\matr{B}_1) & \vecb{u}_{1,0}(\matr{A}_1\otimes\matr{B}_0) & \vecb{u}_{1,1}(\matr{A}_1\otimes\matr{B}_1) & \vecb{0}\\
+\vecb{u}'_0(\matr{A}_0\otimes\matr{B}_0) +\vecb{u}'_1\matr{C}_0 & \vecb{0} & \vecb{0} & \vecb{0} & \vecb{u}'_1\matr{C}_1
+\end{pmatrix}
+$$
+and that $\vecb{d}^\dag\dsum\vecb{d}^\ddag$ can be written as
+$$
+\begin{pmatrix} \vecb{d}^\dag\\ \vecb{d}^\ddag \end{pmatrix}
+=
+\begin{pmatrix}
+\vecb{u}_{0,1}\mu_{0,1} + \vecb{u}_{1,0}\mu_{1,0} + \vecb{u}_{1,1}\mu_{1,1}\\
+\vecb{u}'_{0}\nu_{0} + \vecb{u}'_1\nu_1
+\end{pmatrix},
+\text{ where } \nu_0 \neq 0.
+$$
+Lets see that $\vecb{d}^\dag\dsum\vecb{d}^\ddag$ is not in the immage of $\matr{J}$ by showing that there aren't solutions to $\vecb{d}^\dag\dsum\vecb{d}^\ddag=\matr{J}(\vecb{w}_{0,0}\dsum\vecb{w}_{0,1}\dsum\vecb{w}_{1,0}\dsum\vecb{w}_{1,1}\dsum\vecb{w}_2)$. Indeed, suppose that
+\begin{align}
+\begin{pmatrix}
+\vecb{u}_{0,1}\mu_{0,1} + \vecb{u}_{1,0}\mu_{1,0} + \vecb{u}_{1,1}\mu_{1,1}\\
+\vecb{u}'_{0}\nu_{0} + \vecb{u}'_1\nu_1
+\end{pmatrix}
+=
+\begin{pmatrix}
+\sum_{i,j\in\bits}\vecb{u}_{i,j}(\matr{A}_i\otimes\matr{B}_j)\vecb{w}_{i,j}\\
+\vecb{u}_0(\matr{A}_0\otimes\matr{B}_0)\vecb{w}_{0,0} + \vecb{u}'_1\matr{C}_0\vecb{w}_{0,0}+\vecb{u}'_1\matr{C}_1\vecb{w}_2.
+\end{pmatrix}
+\label{eq:d-li}
+\end{align}
+Given that $\vecb{u}_{0,0}$ is linearly independetn from $\{\vecb{u}_{0,1},\vecb{u}_{1,0},\vecb{u}_{1,1}\}$ and that $\vecb{u}_{0,0}$ doesn't appear on the left side of the first row of equation (\ref{eq:d-li}), it must hold that $(\matr{A}\otimes\matr{B})\vecb{w}_{0,0}=\vecb{0}$. Then, the second row is reduced to
+$$
+\vecb{u}'_{0}\nu_{0} + \vecb{u}'_1w_0\nu_1 = \vecb{u}'_1(\matr{C}_0\vecb{w}_{0,0}+\matr{C}_1\vecb{w}_2).
+$$
+Since $\vecb{u}'_0$ is linearly independent from $\vecb{u}'_1$, it must hold that $\nu_0=0$ but this contradicts the fact that $\vecb{c}'\neq\Com_{ck'}(\vecb{x};\vecb{\rho}')$ for all $\vecb{\rho}'$. We conclude that $\vecb{d}^\dag\dsum\vecb{d}^\ddag$ is not in the immage of $\matr{J}$ and $[\pi-\pi^\dag]$ is a proof of a false statement, contradicting the soundness of the QA-NIZK proof system for linear languages.
+\end{document}
 The first case is the more general form of a set-membership proof where the set is dynamically chosen. In the second case each instance of the proof system is fixed to a specific set (encoded in the CRS) and is the same notion of the proofs for ``fixed sets'' from Section \ref{sec:bits-applications}. We note that the aggregated set-membership proofs for $S\subset\GG_s$ from Chapter \ref{sec:shuf-rp} are proofs of membership in $\Lang_{ck,S}^n$.
 
 In Section \ref{sec:improved-aZKSMP-intuition}, we start with an intuitive description for the case $S\subset\Z_q$ without aggregation. We note that even in this simpler case, to the best of our knowledge, the shortest non-interactive proof, under falsifiable assumptions and without assuming anything about $S$,\footnote{If $S=[a,b]\subset\Z_q$ and $a<b$ we can use range proofs.} that exists in the literature is the one of Chandran et al.~of size $\Theta(\sqrt{|S|})$.
