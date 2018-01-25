@@ -8,7 +8,6 @@ In this work we construct a NIZK argument of knowledge (NIZK-AoK) for the langua
 	C : \exists \vecb{x}\in\Z_p^m \text{ s.t. } C \text{ is an algebraic circuit and } C(\vecb{x})=1
 	\right\},
 \]
-<<<<<<< HEAD
 with proof size $\kappa+\Theta(\mathrm{depth}(C))$ elements of a bilinear group, where $\kappa$ is the size of a proof of knowledge of $\vecb{x}$. In the case of binary circuits, i.e.~$p=2$, we have that $\kappa=2|\vecb{x}|+O(1)$ using the techniques of \cite{AC:GonHevRaf15}. In general, $\kappa$ sould be independent from the circuit.
 %
 %We can equivalently see our result as what we call a \emph{conditonal} AoK (cAoK and NIZK-cAoK when it also has the NIZK properties). In a cAoK soundness is only guaranteed when one assumes that the adversary knows some secret $\vecb{x}$. This implies that now the 
@@ -24,15 +23,22 @@ with proof size $\kappa+\Theta(\mathrm{depth}(C))$ elements of a bilinear group,
 
 We organize the circuit gates by level, where level $\ell$ is formed by the gates at distance $\ell$ from the output gate. For example, the $d$-th level, where $d:=\mathrm{depth}({C})$, contain the gates whose inputs are only elements from the circuit input $\vecb{x}$ and the $0$-th level contains the unique gate whose output is the output of the circuit.
 
-To each level we might associate a vector of degree 2 polynomials $\vecb{p}_\ell \in \Z_q^{n_\ell}[W_1,\ldots,W_{m_\ell}]$, where $m_\ell\in\mathbb{N}$ is the number of inputs of level $\ell$ and $n_\ell\in\mathbb{N}$ is the number of outputs (or, equivalently the number of gates) of level $\ell$. Note that it must hold that $\sum_{i<\ell} n_i\geq m_\ell \geq n_{\ell-1}$ ({\color{red} TODO: Check this}) and that it must hold that for every $\vecb{x}\in\Z_p^m$
+To each level we might associate a vector of degree 2 polynomials $\vecb{p}_\ell \in \Z_q^{n_\ell}[W_1,\ldots,W_{m_\ell}]$ s, where $m_\ell\in\mathbb{N}$ is the number of inputs of level $\ell$ and $n_\ell\in\mathbb{N}$ is the number of outputs (or, equivalently the number of gates) of level $\ell$. For each level $\ell$ it must hold that $\vecb{w}_\ell=\vecb{p}_\ell(\vecb{w}_{\ell-1})$ is the vector of outputs of all gates at level $\ell$ when its input is $\vecb{w}_{\ell-1}$.
+W.l.o.g.~we assume that the outputs of level $\ell-1$ are all the inputs of level $\ell$, since we might add identity gates. For example, suppose that $x_3$ is an input of level $d-1$, then we add an identity gate at level $d$ and thus $\vecb{p}_d=(\ldots,x_3,\ldots)$.
+ Therefore, it must hold that $ m_\ell = n_{\ell-1}$ and that for every $\vecb{x}\in\Z_p^m$
 $$
-C(\vecb{x}) = (\vecb{p}_{d}\circ\vecb{p}_{d-1}\circ\ldots\circ \vecb{p}_0) (\vecb{x}) \text{  \color{red} TODO: I need to add id gates}
+C(\vecb{x}) = \vecb{p}_{d}\circ\vecb{p}_{d-1}\circ\ldots\circ \vecb{p}_0 (\vecb{x})
 $$
 
 We work on asymmetric bilinear groups and our construction is built from the following primitives:
 \begin{enumerate}
-\item A commitment scheme for vectors in $\Z_q^m$ for wich we can construct a NIZK argument of knowledge of the opening.
-\item An homomorphic commitment scheme $\Com$ for vectors in $\Z_q^m$, randomness in $\Z_q^r$, and commitment keys in $\GG_s^{k\times(m+r)}$ with (possibly) constant-size commitments in $\GG_s^k$, $s\in\{1,2\}$. Additionally we require that, whenever $k=m+r$, $\Com$ defines perfectly binding commitments.
+\item Homomorphic commitment schemes for vectors of integers in $\Z_q^m$ with randomness in $\Z_q^r$ and the following properties:
+\begin{enumerate}
+	\item Commitment keys are matrices over one of the base groups $$ck=[\matr{G}_0\cat\matr{G}_1]_s\in\GG_s^{k\times(m+r)}$$ and $k>r$.
+	\item Commitments are defined by $\Com_{ck}(\vecb{x};\vecb{r})=[\matr{G}_0]_s\vecb{x}+[\matr{G}_1]_s\vecb{r}$.		\item Whenever $k=m+r$, $\Com$ defines perfectly binding commitments (or equivalently $\matr{G}$ is invertible) and 	                   there is a QA-NIZK AoK of an oppening. In this case we will say that is a knowledge commitment and write $\mathsf{KCom}$ instead of $\Com$.
+	\item One might sample $ck$ together wit a trapdoor $t$ allows to compute $\Com_{ck}(\vecb{x};\vecb{0})$ from $\Com_{ck}(\vecb{x};\vecb{w})$.
+	\item there is a computationally indisintguishable way of sampling the commitment keys where $\mathrm{Im}(\matr{G}_0)\subseteq\mathrm{Im}\mathrm(\matr{G}_1)$.
+\end{enumerate}
 \item A constant size QA-NIZK argument for the following language
 $$
 \mathcal{L}_{\mathsf{deg}\mbox{-}2,ck,ck'}(\vecb{p}):=\left\{[\vecb{c}]_s,[\vecb{c}']_s:
@@ -40,47 +46,55 @@ $$
 		\text{knowledge of } \vecb{x} \text{ s.t. }
 		{[\vecb{c}]_1=\Com_{ck}(\vecb{x})}
 		\Longrightarrow\\
-		\text{knowledge of }\vecb{y}\text{ s.t. }{[\vecb{c}']_1=\mathsf{Com}_{ck'}(\vecb{y})}\\
-		\text{and } \vecb{y}=\vecb{p}(\vecb{x})
+		{[\vecb{c}']_1=\mathsf{Com}_{ck'}(\vecb{p}(\vecb{x}))}
 	\end{array}\right\},
 $$
-for some $\vecb{p}\in\Z_p^n[X_1,\ldots,X_m]$ of degree at most 2. In turn, this QA-NIZK argument is constructed from the follwing primitives:
+for some $\vecb{p}\in\Z_p^n[X_1,\ldots,X_m]$ of degree at most 2.
+%In turn, this QA-NIZK argument is constructed from the follwing primitives:
 
 {\color{red} I don't know if it would be a good idea to introduce a notion of conditional argument (or proof) of knowledge, where the soundness reduction has access to an oppening of the commitments.}
-\begin{enumerate}
-\item A QA-NIZK argument for the following language
-$$
-\mathcal{L}_{\mathsf{prod},ck_1,ck_2}=\left\{[\vecb{a}]_1,[\vecb{b}]_2,[\vecb{c}]_1:
-	\begin{array}{c}
-		[\vecb{a}]_1=\mathsf{Com}_{ck_1}(\vecb{x})\text{ and}
-		{[\vecb{b}]_2=\mathsf{Com}_{ck_2}(\vecb{y})}\\
-		\Longrightarrow
-		[\vecb{c}]_1=\Com_{ck_3}(\vecb{x}\otimes\vecb{y})
-	\end{array}\right\},
-$$
-where $\vecb{x}\in\Z_q^m,\vecb{y}\in\Z_q^n,\vecb{x}\otimes\vecb{y}\in\Z_q^{mn}$, $ck_3=ck_1\otimes ck_2\in\GG_T^{k_1k_2\times(m+r_1)(n+r_2)}$, and $\otimes$ denote the kroenecker product between matrices with entries in $\Z_q$ or $\GG_s$, where multiplication is replace by the pairing function $e$ when necessary (the commitment keys are matrices of group elements).
-\item A QA-NIZK argument for the language
-$$
-\mathcal{L} = \left\{[\vecb{c}]_1,[\vecb{c}']_1:
-	\begin{array}{l} \text{knowledge of } \vecb{x} \text{ s.t. }
-		{[\vecb{c}]_1=\Com_{ck_1\otimes ck_2}(\vecb{x})}
-		\Longrightarrow\\
-		{[\vecb{c}']_1=\mathsf{Com}_{ck'}(\vecb{x})}
-	\end{array}\right\},
-$$
-\item A QA-NIZK argument for the language
-$$
-\mathcal{L} = \left\{[\vecb{c}]_1,[\vecb{a}']_1,[\vecb{b}']_2:
-	\begin{array}{l}
-		\text{knowledge of } \vecb{x} \text{ s.t. }[\vecb{c}]_1=\Com_{ck}(\vecb{x})\\
-		\Longrightarrow
-		[\vecb{a}']_1=\mathsf{Com}_{ck_1}(\matr{\Gamma}_1\vecb{x})\text{ and }
-		[\vecb{b}']_2=\mathsf{Com}_{ck_2}(\matr{\Gamma}_2\vecb{x})
-	\end{array}\right\},
-$$
-\end{enumerate}
+\item QA-NIZK arguments of membership in linear spaces as defined in \cite{EC:KilWee15}.
+%\begin{enumerate}
+%\item A QA-NIZK argument for the following language
+%$$
+%\mathcal{L}_{\mathsf{prod},ck_1,ck_2}=\left\{[\vecb{a}]_1,[\vecb{b}]_2,[\vecb{c}]_1:
+%	\begin{array}{c}
+%		[\vecb{a}]_1=\mathsf{Com}_{ck_1}(\vecb{x})\text{ and}
+%		{[\vecb{b}]_2=\mathsf{Com}_{ck_2}(\vecb{y})}\\
+%		\Longrightarrow
+%		[\vecb{c}]_1=\Com_{ck_3}(\vecb{x}\otimes\vecb{y})
+%	\end{array}\right\},
+%$$
+%where $\vecb{x}\in\Z_q^m,\vecb{y}\in\Z_q^n,\vecb{x}\otimes\vecb{y}\in\Z_q^{mn}$, $ck_3=ck_1\otimes ck_2\in\GG_T^{k_1k_2\times(m+r_1)(n+r_2)}$, and $\otimes$ denote the kroenecker product between matrices with entries in $\Z_q$ or $\GG_s$, where multiplication is replace by the pairing function $e$ when necessary (the commitment keys are matrices of group elements).
+%\item A QA-NIZK argument for the language
+%$$
+%\mathcal{L} = \left\{[\vecb{c}]_1,[\vecb{c}']_1:
+%	\begin{array}{l} \text{knowledge of } \vecb{x} \text{ s.t. }
+%		{[\vecb{c}]_1=\Com_{ck_1\otimes ck_2}(\vecb{x})}
+%		\Longrightarrow\\
+%		{[\vecb{c}']_1=\mathsf{Com}_{ck'}(\vecb{x})}
+%	\end{array}\right\},
+%$$
+%\item A QA-NIZK argument for the language
+%$$
+%\mathcal{L} = \left\{[\vecb{c}]_1,[\vecb{a}']_1,[\vecb{b}']_2:
+%	\begin{array}{l}
+%		\text{knowledge of } \vecb{x} \text{ s.t. }[\vecb{c}]_1=\Com_{ck}(\vecb{x})\\
+%		\Longrightarrow
+%		[\vecb{a}']_1=\mathsf{Com}_{ck_1}(\matr{\Gamma}_1\vecb{x})\text{ and }
+%		[\vecb{b}']_2=\mathsf{Com}_{ck_2}(\matr{\Gamma}_2\vecb{x})
+%	\end{array}\right\},
+%$$
+%\end{enumerate}
 \end{enumerate}
 
+Lets quickly describe how our proof system is built from this primitives. The CRS is composed by the commitent key $ck_\mathsf{PoK}$ for commitments of type (b) and the CRS $\crs_\mathsf{PoK}$ for proving knowledge of an oppening of these commitments. It also contains commtiment keys $ck_{d+1},ck_d\ldots,ck_0$ for commitments and CRS's $\crs_d,\ldots,\crs_0$ for proving membership in $\mathcal{L}_{\mathsf{deg}\mbox{-}2,ck_{d-1},ck_d}(\vecb{p}_d),\allowbreak\ldots,\allowbreak\mathcal{L}_{\mathsf{deg}\mbox{-}2,ck_1,ck_0}(\vecb{p}_0)$, respectively. These commitment keys define commitments of size $k=r+1=O(1)$, i.e.~independent of the size of $\vecb{x}$, and for $\crs_0$, $k=m+r=r+1$ (there is a unique output) and define perfectly binding commtiments. Finally, the CRS contains $\crs_\mathsf{lin}$ for proving membersip in a linear space.
+
+Given some $\vecb{x}$ such that $C(\vecb{x})= 1$, the prover computes the proof as follows. It compute a knowledge commitment $[\vecb{c}]_1$ of $\vecb{x}$, together with $\pi$ an AoK of $\vecb{x}$, and constant-size commtiments $[\vecb{c}_{d+1}]_1,\ldots,[\vecb{c}_0]_1$ with proofs $\pi_d,\ldots,\pi_0$ that $([\vecb{c}_{\ell-1}]_1,[\vecb{c}_\ell]_1)\in\mathcal{L}_{\mathsf{deg}\mbox{-}2,ck_{\ell-1},ck_\ell}(\vecb{p}_\ell) $. It additionally provides proofs that $[\vecb{c}]_1$ and $[\vecb{c}_{d+1}]_1$ can be oppened to the same value and that $[\vecb{c}_0]_1$  can be oppened to 1.
+
+A sketch of the proof of soudness is as follows. Assume the prover commits to some $\vecb{x}$ s.t. $C(\vecb{x})\neq 0$. We can extract $\vecb{x}$ and the soundness of $\pi$ implies that $[\vecb{c}]_1$ and $[\vecb{c}_{d+1}]_1$ share a common oppenig. Since $[\vecb{c}]_1$ is perfectly binding, the unique oppening they can share is $\vecb{x}$. Similarly, $[\vecb{c}_0]_1$ has a unique oppening which is equal to 1.
+Let $\ell^*$ the larger index between $0$ and $d$ such that $[\vecb{c}_{\ell}]\neq\Com_{ck_{\ell}}(\vecb{w}_\ell;\vecb{\rho})$ for every $\vecb{\rho}$. 
+ 
 \section{Technical Overview}
 
 \subsubsection{Constant-Size  Multiplicative Homomorphic Commitments.}
@@ -97,7 +111,7 @@ $$
 where $ck_2:=[\matr{H}_0|\matr{H}_2]_1,ck_3=[\matr{G}\otimes\matr{H}]_T$ and
 $$\vecb{\rho}_3=\pmatri{\vecb{0}_m\\\vecb{\rho}_1}\otimes\pmatri{\vecb{y}\\\frac{1}{2}\vecb{\rho}_2}+\pmatri{\vecb{x}\\\frac{1}{2}\vecb{\rho}_1}\otimes\pmatri{\vecb{0}_n\\\vecb{\rho}_2}$$ ($\vecb{\rho_3}$ has a different form?).
 
-This approach has the disadvantage that once we compute $[\vecb{c}]_T=\Com_{ck_3}(\vecb{x}\otimes\vecb{y})$ we are stucked in the target group and no more multiplications are possible. But one can still \emph{bootstrap} commitment $[\vecb{c}]_T$ (in some analogy with FHE techniques)  by bringing it to one of the base groups $\GG_s$ and requiring the verifier to check that
+This approach has the disadvantage that once we compute $[\vecb{c}]_T=\Com_{ck_3}(\vecb{x}\otimes\vecb{y})$ we are stucked in the target group and no more multiplications are possible. But one can still \emph{bootstrap} commitment $[\vecb{c}]_T$  by bringing it to one of the base groups $\GG_s$ and requiring the verifier to check that
 $$
 e([\vecb{a}]_1,[\vecb{b}]_2)=e([\vecb{c}]_s,[\matr{I}]_{2-s+1}).
 $$
