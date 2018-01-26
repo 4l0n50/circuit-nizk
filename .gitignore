@@ -14,3 +14,4 @@
 *.4ht
 *.gz
 .DS_Store
+*.synctex(busy)
