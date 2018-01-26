@@ -30,7 +30,7 @@ $$
 
 We work on asymmetric bilinear groups and our construction is built from the following primitives:
 \begin{enumerate}
-\item A commitment scheme for vectors in $\Z_q^m$ for wich we can construct a NIZK argument of knowledge of the opening.
+\item An homomorphic commitment scheme $\mathsf{KCom}$ for vectors in $\Z_q^m$, randomness in $\Z_q^r$, commitment key in $\GG_s^{k\times(m+r)}$, and commitments in $\GG_s^k$, for wich we can construct a NIZK argument of knowledge of the opening. Further it must be possible to construct a QA-NIZK argument of equal oppening of one commitment of this type and another of of the type describe in 2.
 \item An homomorphic commitment scheme $\Com$ for vectors in $\Z_q^m$ and randomness in $\Z_q^r$ with (possibly) constant-size commitments in $\GG_s^k$, $s\in\{1,2\}$. Additionally we require that, whenever $k=m+r$, $\Com$ defines perfectly binding commitments.
 \item A QA-NIZK argument for the following language
 $$
@@ -80,6 +80,13 @@ $$
 \end{enumerate}
 \end{enumerate}
 
+Let's see how can primitives 1,2, and 3 be combined to obtain a NIZK for CircuitSat. The CRS will contain $ck_\mathsf{PoK}$ for commitments in 1, $ck_{d+1},ck_{d},\ldots,ck_0$ for commitments 2, and $\mathsf{crs}_d,\ldots,\mathsf{crs}_0$ for the QA-NIZK argument in 3 for the languages $\mathcal{L}_{\mathsf{deg}\mbox{-}2,ck_d,ck_{d-1}}(\vecb{p}_d),\ldots,\mathcal{L}_{\mathsf{deg}\mbox{-}2,ck_1,ck_0}(\vecb{p}_0)$, respectively.
+
+On input a a witness $\vecb{x}$ for the circuit $C$, the prover computes commitment $c\gets\mathsf{KCom}_{ck_\mathsf{PoK}}(\vecb{x})$ together with a proof $\pi$ of knowledge of $\vecb{x}$. It computes commitments $[\vecb{c}_\ell]_1\gets\Com_{ck_i}(\vecb{p}_d\circ\ldots\circ\vecb{p}_\ell(\vecb{x}))$ for $1\leq \ell\leq d$ and $[\vecb{c}_{d+1}]_1\gets\Com_{ck_{d+1}}(\vecb{x})$ and a proof $\pi_\mathsf{eq}$ that $c$ and $[\vecb{c}_{d+1}]$ can be onppend to the same value. The prover computes proofs $\pi_\ell$ that $[\vecb{c}_\ell],[\vecb{c}_{\ell-1}]$ belongs to $\mathcal{L}_{\mathsf{deg}\mbox{-}2,ck_1,ck_0}(\vecb{p}_\ell)$ for $1\leq\ell\leq d$. Finally, it proves that $[\vecb{c}_0]$ is a commitment to 1.
+
+An intuitive reason of why this proof system is sound is as follows. Suppose an adversary produces a proof $\pi$ for a circuit $C$ such that is impossible to extract from $\pi$ some $\vecb{x}$ s.t.~$C(\vecb{x})=1$. In particular, let $\vecb{x}$ the oppening of $c$ which can be extracted from $\pi_\mathsf{PoK}$, then $C(x)=0$. Let $\vecb{w}_\ell := \vecb{p}_d\circ\ldots\circ \vecb{p}_\ell(\vecb{x})$, $1\leq\ell\leq d$, and let $\ell^*$ be the lowest index such that $[\vecb{c}_{\ell^*}]_1\neq\Com_{ck_\ell^*}(\vecb{w}_{\ell^*};\vecb{\rho})$ for any $\vecb{\rho}$. Note that $1\leq\ell^*\leq d$ since otherwise $[\vecb{c}_0]=\Com_{ck_0}(C(\vecb{x}))$ would violate soudness of the proof that $[\vecb{c}_0]$ opens to 1. We conclude that $[\vecb{c}_{\ell^*-1}],[\vecb{c}_{\ell^*}]\notin\mathcal{L}_{\mathsf{deg}\mbox{-}2,ck_{\ell^*-1},ck_{\ell^*}}(\vecb{p}_{\ell^*})$ voilating the soundness of the QA-NIZK describe in 3.
+
+ 
 \section{Technical Overview}
 
 \subsubsection{Constant-Size  Multiplicative Homomorphic Commitments.}
