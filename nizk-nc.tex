@@ -1,0 +1,89 @@
+% !TEX root = ./main-circuit-nizk.tex
+
+We construct a NIZK proof system for NC, that is circuits of polylogarithmic depth, whose proof consists of a perfectly binding commitment to the circuit inputs plus a proof that the circuit outputs 1 when evaluated in the committed inputs. The size of the proof is linear in the depth of the circuit. 
+
+We setup a CRS composed of commitment keys indexed by a level in the circuit and labeled as L (left), R (right), and O (output). Specifically, these commitment keys are random matrices $[\matr{L}_i]_1,[\matr{R}_i]_2,[\matr{O}_1]_1,\ldots,[\matr{L}_d]_1,[\matr{R}_d]_2,[\matr{O}_d]_1$ of size $2\times(n_i+1),2\times(n_i+1),2\times(n_i+1)$, where $i\in[d]$ and $d$ is the depth of the circuit. Each commitment key is used for computing commitments of the left, right and output wires of all the gates at some given level.  Denote by $[\vecb{a}_i]_1,[\vecb{b}_i]_2,[\vecb{c}_i]_1$, $i\in[d]$, these commitments.
+
+We compile any circuit into another circuit consisting of $d$ sets of NAND gates, each set of size $n_i$, and a set of ``wiring'' matrices $\matr{W}^L_1,\matr{W}^R_1\in\bits^{n_2\times n_{1}},\allowbreak,\ldots,\allowbreak\matr{W}^R_d\in\bits^{n_d\times n_{d-1}}$. Let $\vecb{z}_{i-1}\in\bits^{n_i-1}$ the vector of outputs at level $i$. The wiring matrices $\matr{W}^L_i$ and $\matr{W}^R_i$ are chosen such that
+$$
+\vecb{x}_i = \matr{W}^L_i\vecb{z}_{i-1} \text{ and } \vecb{y}_i = \matr{W}^R_i\vecb{z}_{i-1}
+$$
+and each row of both $\matr{W}^L_i$ and $\matr{W}^R_i$ contains at most one $1$.
+
+
+For each tuple $([\vecb{c}_{i-1}]_1,[\vecb{a}_i]_1,[\vecb{b}_i]_2)$ one needs to give two proofs: a) ``correct wiring'', that is show that the input of the left and right wires at level $i$ are correctly taken from the outputs of level $i-1$; and b) a proof that $\vecb{z}_i=\mathrm{NAND}(\vecb{x}_i,\vecb{y}_i)$, where NAND is computed component-wise.
+
+To prove``correct wiring'' of the openings of $[\vecb{c}_{i-1}]_1,[\vecb{a}_i]_1,[\vecb{b}_i]_2$ we give QA-NIZK proof of the existence of $\vecb{z}_{i-1},\vecb{\tau}_{i-1},\vecb{\rho}_i,\vecb{\sigma}_i$ such that
+$$
+\begin{pmatrix}
+\vecb{c}_{i-1} \\ \vecb{a}_i \\ \vecb{b}_i
+\end{pmatrix}
+=
+\begin{pmatrix}
+\matr{O}^1_{i-1}  & \matr{O}^2_1  & \vecb{0}       & \vecb{0}\\
+\matr{L}^1_i\matr{W}^L_i         & \vecb{0}         & \matr{L}^2_i & \vecb{0} \\
+\matr{R}^1_i\matr{W}^R_i         & \vecb{0}         & \vecb{0}      & \matr{R}^2_i
+\end{pmatrix}
+\begin{pmatrix}
+\vecb{z}_{i-1} \\ \vecb{\tau}_{i-1} \\ \vecb{\rho}_i \\ \vecb{\sigma}_i
+\end{pmatrix}
+$$
+
+For the second proof, we can equivalently express it as
+$$
+\vecb{z}_i = \vecb{1} - \vecb{x}_i\circ\vecb{y}_i,
+$$
+assuming that the circuit input is a vector in $\bits^{n_0}$, which can be proven adapting QA-NIZK proofs for bitstrings. Specifically, we compute and $[\vecb{\pi}]_1\in\GG_1^4$ such that\footnote{As it is, this proof is not zero-knowledge. However, it can be easily made zero-knowledge giving two shares  of $\vecb{\pi}_i$ (one in each group) as we did in our AC paper.}
+$$
+\sum_{j=1}^{n_i} \vecb{\lambda}_j\otimes \vecb{\rho}_j-\vecb{a}_i\otimes\vecb{b}_i = \vecb{\pi}_i,$$  where $\vecb{\lambda}_j,\vecb{\rho}_j$ are the columns of $\matr{L}_i$ and $\matr{R}_i$, and a proof of existence of $\vecb{w}\in\Z_q^{(n_i+1)^2}$ such that
+$$
+\begin{pmatrix}
+\vecb{\pi}_i \\ \vecb{c}_i
+\end{pmatrix}
+=
+\begin{pmatrix}
+\matr{L}^1_i\otimes\matr{R}^1_i & \matr{L}^1_i\otimes\matr{R}^2_i & \matr{L}^2_i\otimes\matr{R}^1_i & \matr{L}^2_i\otimes\matr{R}^2_i  & \vecb{0 }\\
+\matr{D}_i                  & \vecb{0}                                       & \vecb{0}                                       & \vecb{0}
+                                   & \matr{O}^2_i   
+\end{pmatrix}
+\vecb{w},
+$$
+where $\matr{D}_i$ are the rows of an identity matrix of size $n_i$ whose $i$ th 1 is replaced by $\vecb{o}_i$ and zeros by $\vecb{0}\in\Z_q^2$. That is
+$$
+\matr{D}_i := 
+\begin{pmatrix}
+	\vecb{o}_1\ \vecb{0}\cdots\vecb{0} |
+	\vecb{0}\ \vecb{o}_2\ \vecb{0}\cdots\vecb{0} |
+	\cdots |
+	\vecb{0}\cdots\vecb{0}\ \vecb{o}_{n_i}
+\end{pmatrix}
+\in\Z_q^{n_i^2}
+$$
+Finally, we compute a proof that $\vecb{c}_d$ opens to 1.
+\paragraph{Soundness Intuition.} Let $[\vecb{c}]_1$ the perfectly binding commitment to the circuit inputs, and assume that we are able to extract its opening $\vecb{z}_0\in\bits^{n_0}$ (which can be easily done with a constant-size proof that each opening is a bit). From $\vecb{z}_0$ we can compute an honest wire evaluation $\vecb{x}_1,\vecb{y}_1,\vecb{z}_1,\ldots,\vecb{x}_d,\vecb{y}_d,\vecb{z}_d$.
+
+We will change the commitment keys in an computationally indistinguishable fashion, so that, at each level, commitments are perfectly binding for a single gate. Additionally, we will require that, if the commitment keys at level $i$ are perfectly binding for gate $j$, then the commitment keys at level $i-1$ are perfectly binding for some gate whose output is one of the inputs of gate $j$. Thereby, we are choosing a random path from the circuit output to one of its inputs. It will hold that for all the wires in the path the NIZK proofs will be sound (and in the other gates they will be trivially sound since the commitments are perfectly hiding).
+
+%In order to break the binding property of commitment $\vecb{c}_0$, 
+We are going to pick a path that differs at all the output wires from the corresponding honestly evaluated path. Note that if this is the case, we can extract two different openings for $\vecb{c}_0$ at the coordinate that is perfectly binding.
+
+Consider the (unique) opening of commitments $([\vecb{a}_1]_1,\allowbreak [\vecb{b}_1]_2,\allowbreak[\vecb{c}_1]_1),\ldots,([\vecb{a}_d]_1,\allowbreak[\vecb{b}_d]_2,[\vecb{c}_d]_1)$ at the chosen path and the corresponding honestly evaluated path, say at gates $j_1,\ldots,j_d$ (note that $j_d=1$ since there is a single gate at the deepest level). We write, respectively, the former and later paths as
+\begin{align*}
+&(x^*_{1},y^*_{1},z^*_{1}),\ldots,(x^*_{d},y^*_{d},z^*_{d}),\\
+&(x_{1,j_1},y_{1,j_1},z_{1,j_1}),\ldots,(x_{d,j_d},y_{d,j_d},z_{d,j_d}).
+\end{align*}
+Note that, if the adversary produces a convincing proof, then it must hold that $z^*_{d}=1$. On the other hand, for an honest evaluation it must hold that $z_{d,j_d}=0$, since otherwise the adversary is not cheating.
+At this point we have $z^*_{d}\neq z_{d,j_d}$ and thus both paths differs at its last output wires. Next, we will show that this will happen for all the other output wires with non negligible probability.
+
+Assume that $z^*_{i}\neq z_{i,j_i}$ with probability $p$. We want to show that, with probability essentially $p/2$, it also holds that $z^*_{i-1}\neq z_{i-1,j_{i-1}}$. The hypothesis implies that at that at least one of the following inequalities hold:
+$$x^*_{i}\neq x_{i,j_i}\text{ or }y^*_{i}\neq y_{i,j_i}.$$ 
+Indeed, by soundness of the NIZK proofs for NAND, otherwise we get that
+$$z^*_{i} = \mathrm{NAND}(x^*_{i},y^*_{i})  = \mathrm{NAND}(x_{i,j_i},y_{i,j_i})=z_{i,j_i},$$
+which is in fact the negation of the hypothesis. 
+
+Now we use the fact that commitment keys at level $i-1$ are perfectly binding at a randomly chosen gate among the two whose outputs are wired to $x^*_{i,j_i}$ or $y^*_{i,j_i}$. Since with probability $1/2$ either $z^*_{i-1}=x^*_{i}$ or $z^*_{i-1}=y^*_{i}$, and $z_{i-1,j_{i-1}}=x_{i,j_i}$ or $z_{i-1,j_{i-1}}=x_{i,j_i}$, we get that, conditioned on $z^*_{i}\neq z_{i,j_i}$, $z^*_{i-1}\neq z_{i-1,j_{i-1}}$ holds with probability at least 1/2. We conclude that 
+$$
+\Pr[z^*_{i-1}\neq z_{i-1,j_{i-1}}] \geq \Pr[z^*_{i-1}\neq z_{i-1,j_{i-1}}|z^*_{i}\neq z_{i,j_i}]\Pr[z^*_{i}\neq z_{i,j_i}] = p/2.
+$$
+
+Using the same argument $d$ times, we can get two different openings for one of the input commitments with probability roughly $1/2^d$. Assuming $d=\mathrm{polylog}(n)$, we have that this probability is non-negligible.

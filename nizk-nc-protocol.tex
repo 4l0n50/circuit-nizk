@@ -1,0 +1,204 @@
+% !TEX root = ./main-circuit-nizk.tex
+
+Consider the distributions $\dist_0,\dist_1,\ldots,\dist_n$ over matrices $\matr{U}_0,\matr{U}_1,\ldots,\matr{U}_n\in\Z_q^{2\times(n_i+1)}$ such that 
+\begin{align}
+\matr{U}_0 := \vecb{u}\matr{T}_2 \text{ and } \matr{U}_i := (\vecb{u}\matr{T}_1|\vecb{t}|\vecb{u}\matr{T}_2),
+\end{align}
+where $\matr{T}_1 \gets\Z_q^{2\times i},\matr{T}_2\gets\Z_q^{2\times(n_i+1-i)}$, $\vecb{a}\gets\Z_q^2$, and $\vecb{t}$ is chosen uniformly from $\Z_q^{2}\setminus\mathrm{Im}(\vecb{a})$.
+Consider also a circuit $C$ of depth $d$ constructed from wiring matrices $\matr{W}^L_i,\matr{W}^R_i\in\bits^{n_{i+1}\times n_i}$ and NAND gates, where $i\in[d]$ and $n_0,\ldots,n_d$ are the number of inputs at levels $0,1,\ldots,d$.
+
+Our proof system is defined as follows.
+\begin{description}
+\item[{$\algK_0(gk)$}:] Pick $\matr{U}\gets\dist$ and define $ck_0 := [\matr{U}]_1$, such that $ck_0$ defines perfectly binding commitments. Define $\crs_0 := ck_0$
+\item[{$\algK_1(\crs_0, C)$}:]
+For each $i\in[d]$,
+pick $\matr{L}_i,\matr{R}_i,\matr{O}_i\gets\dist_0$ and define $ck^{L}_i := [\matr{L}_i]_1,ck^{R}_i := [\matr{R}_i]_2,ck^O_i:=[\matr{O}_i]_1$. Pick also $\crs^\mathsf{wires}_i,\crs^\mathsf{gates}_i$ for computing QA-NIZK proofs of, respectively, membership in the immage of
+\begin{equation}
+\matr{\Gamma}_i :=
+\begin{pmatrix}
+\matr{O}^1_{i-1}  & \matr{O}^2_{i-1}  & \vecb{0}       & \vecb{0}\\
+\matr{L}^1_i\matr{W}^L_i         & \vecb{0}         & \matr{L}^2_i & \vecb{0} \\
+\matr{R}^1_i\matr{W}^R_i         & \vecb{0}         & \vecb{0}      & \matr{R}^2_i
+\end{pmatrix}\in\Z_q^{6\times (n_{i-1}+3)},
+\end{equation}
+where $\matr{O}_0 := \matr{U}$ and $\matr{L}_i,\matr{R}_i,\matr{O}_i$ are parsed as $\matr{L}^1_i,\matr{R}^1_i,\matr{O}^1_i\in\Z_q^{2\times n_i}$ and $\matr{L}^2_i,\matr{R}^2_i,\matr{O}^2_i\in\Z_q^{2\times 1}$, and satisfiability of the set of equations
+\begin{equation}
+\vecb{z}_i = \vecb{1} - \vecb{x}_i\circ\vecb{y}_i,\quad \vecb{x}_i,\vecb{y}_i,\vecb{z}_i\in\Z_q^{n_i}.
+\end{equation}
+Pick also $\crs^\mathsf{out}$ for proving that commitments computed with commitment key $ck_d^O$ open to one.
+
+The CRS is
+$$\crs := (gk,ck_0,\{ck^L_i,ck^R_i,ck^O_i,\crs^\mathsf{wires}_i,\crs^\mathsf{gates}_i:i\in[d]\},\crs^\mathsf{out})$$
+
+\item[{$\algP(\mathsf{crs}, C, \vecb{z}_0)$}:]
+On input $\vecb{z}_0$ such that $C(\vecb{z}_0)=1$, compute $[\vecb{c}_0]:=\Com_{ck_0^O}(\vecb{z}_0;\tau_0)$, for $\tau_0\gets\Z_q$. For each $i\in[d]$, the prover computes
+$$
+\vecb{x}_{i} = \matr{W}^L_{i}\vecb{z}_{i-1},\ \vecb{y}_{i} = \matr{W}^R_{i}\vecb{z}_{i-1},\text{ and }\vecb{z}_i = \mathrm{NAND}(\vecb{x}_i,\vecb{y}_i)
+$$
+computes commitments
+\begin{align*}
+[\vecb{a}_i]_1 = \mathsf{Com}_{ck_i^L}(\vecb{x}_i;\rho_i),\ 
+[\vecb{b}_i]_2 = \mathsf{Com}_{ck_i^R}(\vecb{y}_i;\sigma_i),\ 
+[\vecb{c}_i]_1 = \mathsf{Com}_{ck_i^O}(\vecb{z}_i;\tau_i),
+\end{align*}
+where $\rho_i,\sigma_i,\tau_i\gets\Z_q^r$, and proofs
+\begin{align*}
+&\pi_i^\mathsf{wires}\gets\Pi_\mathsf{lin}.\algP(\crs_i^\mathsf{wires},[\vecb{c}_{i-1}]_1,[\vecb{a}_i]_1,[\vecb{b}_i]_2,\vecb{z}_{i-1},\tau_{i-1},\rho_i,\sigma_i),\\
+&\pi_i^\mathsf{gates}\gets\Pi_\mathsf{quad}.\algP(\crs_i^\mathsf{gates},[\vecb{c}_{i}]_1,[\vecb{a}_i]_1,[\vecb{b}_i]_2,\vecb{x}_i,\vecb{y}_i,\tau_{i},\rho_i,\sigma_i).
+\end{align*}
+Finally, it computes the proof
+\begin{align*}
+&\pi^{\mathsf{out}} \gets \Pi_\sflin.\algP(\crs^\mathsf{out}, [\vecb{c}_d]_1,\tau_d).
+\end{align*}
+The proof is
+$$\pi:=([\vecb{c}_0]_1,\{[\vecb{a}_i]_1,[\vecb{b}_i]_2,[\vecb{c}_i]_1,\pi^\mathsf{wires}_i,\pi^\mathsf{gates}_i:i\in[d]\},\pi^\mathsf{out}).$$
+\item[{\(\algV(\crs,C,\pi)\)}:]
+Parse $\pi$ as $([\vecb{c}_0]_1,\{[\vecb{a}_i]_1,[\vecb{b}_i]_2,[\vecb{c}_i]_1,\pi^\mathsf{wires}_i,\pi^\mathsf{gates}_i:i\in[d]\},\pi^\mathsf{out})$ and check the validity of each of the proofs. Return 0 if any of the ckecks fails, else return 1.
+
+\item[$\mathsf{S}_1$:] TBD.
+
+\item[$\mathsf{S}_2$:] TBD.
+\end{description}
+
+We prove the following Theorem.
+
+\begin{theorem} \label{theo:bits}
+The proof system described above is a composable NIZK AoK proof system for the language \(\mathsf{CircuitSat}(C)\)
+ with perfect completeness, computational soundness, and perfect zero-knowledge.
+\end{theorem}	
+Perfect completeness follows directly by inspection.
+For proving perfect soundness we consider the extractor $\algE$ which, given the commitment $[\vecb{c}_0]_1$ and a trapdoor $\tau$, it outputs the opening $\vecb{z}_0\in\bits^{n_0}$. (Here we are assuming that $\vecb{c}_0$ is extractable in $\bits^{n_0}$)
+
+Computational knowledge soundness follows from the indistinguishability of the following games:
+\begin{description}
+\item[$\sfReal$:] This is the real game. The adversary wins if $\advA||\algE$ outputs $((C,\pi),\vecb{z}_0)$ such that $C(\vecb{z}_0)=0$ and $\algV(\crs,C,\pi)=1$.
+\item[$\sfGame_{1}$] This game is exactly $\sfReal$ except that the extractor is run to compute an opening $\vecb{z}_0$ of $[\vecb{c}_0]_1$, and an honest evaluation of the wires $\vecb{x}_i,\vecb{y}_i,\vecb{z}_i$, $i\in[d]$, is computed from $\vecb{z}_0$. Define also $j_d\gets 1$ and $\mathsf{label}_d \gets \perp$.
+\item[$\sfGame_{1,i}$:] For $i=d$ to $1$, this game is exactly as $\sfGame_{3,i+1}$ except that picks the commitments keys for level $i$ from the distribution $\dist_{j_i}$. {\color{red} Note that in this game there are a unique openings $x^*_i,y^*_i,z^*_i$ and randomness $\rho^*_,\sigma^*_i,\tau^*_i$ such that $\vecb{a}_i = x^*_i\vecb{t}+\rho^*_i\vecb{u}, \vecb{b}_i = y^*_i\vecb{t}+\sigma^*_i\vecb{u}, \vecb{c}_i = z^*_i\vecb{t}+\tau^*_i\vecb{u}$, and the same happens for all deeper levels.}
+
+\item[$\sfGame_{2,i}$:] For $i=d$ to $1$, this game is exactly as $\sfGame_{1,i}$ except that it  aborts if any of the following conditions hold:
+\begin{itemize}
+ 	\item[$E_1$ :] $z^*_{i}= z_{i,j_i}$,
+ 	\item[$E_2$ :] $z^*_i\neq \mathrm{NAND}(x^*_i,y^*_i)$.
+ 	\item[$E_3$ :] $\mathsf{label}_i = L$ and $z^*_i \neq x^*_{i+1}$,
+ 	\item[$E_4$ :] $\mathsf{label}_i = R$ and $z^*_i \neq y^*_{i+1}$.
+\end{itemize}
+
+\item[$\sfGame_{3,i}$:] For $i=d$ to $1$, this game is exactly as $\sfGame_{2,i}$ with the following modifications. An additional label $\mathsf{label}_i$ is randomly is chosen from $\{L,R\}$, and $j_{i-1}$ is defined as the index of the gate at level $i-1$ connected to the left or right wire if, respectively, $\mathsf{label}_i = L$ or $\mathsf{label}_i = R$. Additionally the game aborts if any of the following conditions hold:
+\begin{itemize}
+	\item[$E_5$ :] $\mathsf{label}_i=L$ and $x^*_i = x_{i,j_i}$,
+	\item[$E_6$ :] $\mathsf{label}_i=R$ and $y^*_i = y_{i,j_i}$.
+\end{itemize}
+\end{description}
+ 
+%\begin{theorem} Let \(\mathsf{Adv}_{{\Pi_\sfset}}(\advA)\) 
+%be the advantage of an adversary \(\advA\) against the soundness of 
+%the proof system  described above. There exist PPT adversaries
+%\(\advD_1,\advD_2,\advB_\sfbits,\advB_\sfcom,\advB_\sfsum,\advB_\mathsf{lin}\) such that 
+%\begin{align*}
+%\mathsf{Adv}_{{\Pi_\sfset}}(\advA) \leq 
+%n \left(\right.
+%    &\mathsf{Adv}_{\mathcal{L}_1,\Gr}(\advD_1) 
+%        + \setsize /2\left(4/q
+%            +  \mathsf{Adv}_{\Pi_\sfbits}(\advB_\sfbits)
+%            +  \mathsf{Adv}_{\mathcal{L}_1,\Hr}(\advB_2)\right. \\
+%    &+ \left.\left.\mathsf{Adv}_{{\Pi_\sfcom}}(\advB_\sfcom)
+%        + m\mathsf{Adv}_{{\Pi_\sfsum}}(\advB_\sfsum)
+%        + m\mathsf{Adv}_{{\Pi_\mathsf{lin}}}(\advB_\mathsf{lin})\right)\right).
+%\end{align*}
+%\label{teo:bitstr-soundness}
+%\end{theorem}
+
+It is obvious that the first two games are indistinguishable. We define $\sfGame_{3,d+1}\equiv\sfGame_1$. The sequence of games is
+$$
+\mathsf{Real}  \to \sfGame_1 \equiv \sfGame_{3,d+1} \to \sfGame_{1,d} \to \ldots \sfGame_{3,d}\to \sfGame_{1,d-1}\to
+\ldots \to \sfGame_{3,1}
+$$
+The rest of the argument goes follows from the following lemmas.
+
+\begin{lemma} \label{lemma:3-1}
+For any $i\in[d]$ and any PPT $\advA$ there exists PPT $\advB_1,\advB_2$ such that 
+$$|\Pr\left[ \mathsf{Game}_{3,i+1}(\advA)=1\right]-\Pr\left[ \mathsf{Game}_{1,i}(\advA)=1\right]|\leq 2\adv_{\mathrm{DDH},\GG_1}(\advB_1)+\adv_{\mathrm{DDH},\GG_2}(\advB_2).$$
+\end{lemma}
+
+\begin{proof}  Direct no?
+\end{proof}
+
+\begin{lemma} \label{lemma:1-2}
+For any $i\in[d]$ and any PPT $\advA$ there exists PPT $\advB_1,\advB_2$ such that 
+$$|\Pr\left[ \mathsf{Game}_{1,i}(\advA)=1\right]-\Pr\left[ \mathsf{Game}_{2,i}(\advA)=1\right]|\leq 2\adv_{\Pi_\mathsf{lin}}(\advB_1)+\adv_{\Pi_\mathsf{quad}}(\advB_2).$$
+\end{lemma}
+
+\begin{proof}  Note that the difference between the adversary advantage if both games is upper bounded by $\Pr[E_1]+\Pr[E_2]+\Pr[E_3\cup E_4]$. We proceed to bound these probabilities
+
+\begin{description}
+\item[$E_1$ :]
+By induction on $i$, with base case $i=d$ and inductive step that goes from $i+1$ to $i$, we prove that $\Pr[E_1]\leq \adv_{\Pi_\mathsf{lin}}(\advB_1)$ for some PPT $\advB_1$. Note that with probability at least $\Pr[\adv_{\Pi_\mathsf{lin}}(\advB_1)]$ we have that $z^*_{d,} = 1$, since otherwise we can build $\advB_2$ that breaks soundness of the proof that $\vecb{c}_d$ opens to 1. On the other hand if $\sfGame_{1,i}(\advA)=1$ then $C(\vecb{z}_0)z_{d,j_d}=0$. We conclude that $\Pr[E_1]\leq \adv_{\Pi_\mathsf{lin}}(\advB_1)$.
+
+Assume now that $z^*_{i+1}\neq z_{i+1,j_{i+1}}$. Without loss of generality, assume $\mathsf{label}_i = L$ (the other case is similar).
+Since otherwise $\sfGame_{2,i+1}$ would have aborted (and hence also $\sfGame_{1,i}$ would have aborted), it holds that $z^*_i = x^*_{i+1}$. Similarly, since otherwise $\sfGame_{3,i+1}$ would have aborted, $x^*_{i+1} \neq x_{i+1,j_{i+1}}$. It follows that $z^*_i \neq x_{i+1,j_{i+1}}=z_{i,j_i}$ and hence $\Pr[E_1]=0$.
+
+\item[$E_2$ :] Clearly, if $z^*_i \neq \mathrm{NAND}(x^*_i,y^*_i)$ then we can build an adversary $\advB_2$ against $\Pi_\mathsf{quad}$. Therefore, $\Pr[E_2]\leq \adv_{\Pi_\mathsf{quad}}(\advB_2)$.
+
+\item[$E_3\cup E_4$ :] Without loss of generality, assume that $\mathsf{label}_i = L$ (the other case is symmetric).
+The fact that $\vecb{c}_i$ is perfectly binding at coordinate $j_i$ implies that every solution to $\vecb{c}_i/\vecb{a}_{i+1}/\vecb{b}_{i+1} \in \matr{\Gamma}_{i+1}\vecb{w}$ is equal to $z^*_i$ at position $j_i$.\footnote{Here `/' means vertical concatenation.}
+Since $\mathsf{label}_i = L$, then the $j_{i+1}$ row of $\matr{W}_{i+1}^L$ is equal to $\vecb{e}^\top_{j_i}$ --- meaning that the output of gate $j_{i+1}$ is connected to the left input of gate $j_i$.
+Then
+$$
+\vecb{a}_{i+1} = 
+	(\vecb{a}\matr{T}_1|\vecb{t}|\vecb{a}\matr{T}_2)\pmatri{\matr{W}^R_{i+1}|\vecb{0}\\0\cdots 0|1}\pmatri{\vecb{w}\\\rho^*_i} =
+	\vecb{e}_{j_i}^\top\vecb{w}\vecb{t}+ \rho^*_i\vecb{a} = z_i^*\vecb{t}+\tilde{\rho}_i\vecb{a},
+$$
+for some $\tilde{\rho}_i\in\Z_q$.
+
+Since $\vecb{a}_{i+1}$ is perfectly binding at coordinate $j_{i+1}$, we get that $z^*_i = x^*_{i+1}$. Thus, $z^*_i \neq x^*_{i+1}$ implies that $\vecb{c}_i/\vecb{a}_{i+1}/\vecb{b}_{i+1} \notin \mathrm{Im}(\matr{\Gamma}_{i+1})$ and we can construct an adversary $\advB_1$ such that $\Pr[E_3\cup E_4] \leq \adv_{\Pi_\mathsf{lin}}(\advB_1)$.
+\end{description}
+\end{proof}
+
+\begin{lemma} \label{lemma:2-3}
+For any $i\in[d]$ it holds that,  
+$$\Pr\left[ \mathsf{Game}_{2,i}(\advA)=1\right]\leq 2\Pr\left[ \mathsf{Game}_{3,i}(\advA)=1\right].$$
+\end{lemma}
+\begin{proof}
+Since $\sfGame_{2,i}$ return 1 only if $z^*_i \neq z_{i,j_i}$, it must be that
+$$
+z^*_i = \mathrm{NAND}(x^*_i,y^*_i) \neq \mathrm{NAND}(x_{i,j_i},y_{i,j_i}) = z_{i,j_i}
+$$
+and hence, conditioned on $\sfGame_{2,i}(\advA)=1$, at least one of $x^*_i\neq x_{i,j_i}$ or $y^*_i\neq y_{i,j_i}$ holds. This in turn implies that
+$$
+\Pr[y^*_i = y_{i,{j_i}}|\sfGame_{2,i}(\advA)=1] \leq \Pr[x^*_i \neq x_{i,{j_i}}|\sfGame_{2,i}(\advA)=1].
+$$
+Since $\mathsf{label}_i$ remains information theoretically hidden to the adversary and is thus independent of $x^*_i,y^*_i,x_{i,j_i},y_{i,j_i}$, it follows that
+\begin{align*}
+&\Pr[E_5] = \Pr[\{\mathsf{label}_i = L\} \cap \{x^*_i = x_{i,{j_i}}\}] = \frac{1}{2}\Pr[x^*_i = x_{i,{j_i}}]\\
+&\Pr[E_6] = \Pr[\{\mathsf{label}_i = R\} \cap \{y^*_i = y_{i,{j_i}}\}] \leq \frac{1}{2}\Pr[x^*_i \neq x_{i,{j_i}}]\\
+\Longrightarrow
+& \Pr[\overline{E_5\cup E_6}] \geq 1 - (\Pr[E_5]+\Pr[E_6]) \geq 1-1/2=1/2,
+\end{align*}
+where all probabilities are taken conditioned on $\sfGame_{2,i}(\advA)=1$.
+We conclude that
+\begin{align*}
+\Pr[\sfGame_{3,i}(\advA)] &\geq \Pr[\sfGame_{3,i}(\advA)=1|\overline{E_5\cup E_6}]\Pr[\overline{E_5\cup E_6}] \\
+& = \Pr[\sfGame_{2,i}(\advA)=1|\overline{E_5\cup E_6}]\Pr[\overline{E_5\cup E_6}]\\
+& = \Pr[\overline{E_5\cup E_6}|\sfGame_{2,i}(\advA)=1]\Pr[\sfGame_{2,i}(\advA)=1]\\
+& \geq \frac{1}{2}\Pr[\sfGame_{2,i}(\advA)=1]
+\end{align*}
+\end{proof}
+
+\begin{lemma}
+$\Pr[\sfGame_{3,1}(\advA)=1]=0.$
+\end{lemma}
+\begin{proof}
+Note that $\Pr[\sfGame_{3,1}(\advA)=1]\leq \Pr[\overline{E_5\cup E_6}]$. Assuming w.l.o.g.~that $\mathsf{label}_1=L$, both $z^*_0 = x^*_1$ and $z_{0,j_0}=x_{1,j_1}$ are openings of $\vecb{c}_0$ at position $j_0$. Since $\vecb{c}_0$ is a perfectly binding commitment, it follows that $x^*_1=x_{1,j_1}$ and thus $\Pr[\overline{E_5\cup E_6}]=0$
+\end{proof}
+
+\begin{corollary} For any adversary against the knowledge soundness of the scheme, there exists adversaries $\advB_1,\ldots,\advB_4$ such that
+$$
+\adv(\advA) \leq 2^d(2\adv_{\mathrm{DDH},\GG_1}(\advB_1)+\adv_{\mathrm{DDH},\GG_2}(\advB_2)+2\adv_{\Pi_\mathsf{lin}}(\advB_3)+\adv_{\Pi_\mathsf{quad}}(\advB_4))
+$$
+\end{corollary}
+Define $\delta :=2\adv_{\mathrm{DDH},\GG_1}(\advB_1)+\adv_{\mathrm{DDH},\GG_2}(\advB_2)+2\adv_{\Pi_\mathsf{lin}}(\advB_3)+\adv_{\Pi_\mathsf{quad}}(\advB_4)$.
+It follows from Lemmas \ref{lemma:3-1}, \ref{lemma:1-2} and \ref{lemma:2-3} that 
+$$
+\Pr[\sfGame_{3,d+1}(\advA)=1] \leq \delta + 2\Pr[\sfGame_{3,d}(\advA)=1] \leq \sum_{i=1}^d \delta2^{i-1} = (2^{d}-1)\delta \leq 2^d\delta.
+$$
+\newpage

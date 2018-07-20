@@ -1,7 +1,5 @@
 % !TEX root = ../main-circuit-nizk.tex
 
-\newcommand{\setsize}{t}
-
 In this work we construct a NIZK argument of knowledge (NIZK-AoK) for the language
 \[
 \mathsf{CircuitSat}:=\left\{
@@ -47,7 +45,7 @@ We then give a step forward moving from linear to quadratic languages and constr
 \subsection{Technical Overview}
 We group the circuit gates by level, where level $\ell$ is formed by the gates at distance $\ell-1$ from the inputs. For example, the first level contains the gates whose inputs are only circuit inputs and the $d$-th level, where $d:=\mathrm{depth}({C})$, contains the unique gate whose output is the output of the circuit.
 
-To each level we might associate a vector of degree 2 polynomials $\vecb{p}_\ell \in \Z_q^{n_\ell}[W_1,\ldots,W_{m_\ell}]$ s, where $m_\ell\in\mathbb{N}$ is the number of inputs of level $\ell$ and $n_\ell\in\mathbb{N}$ is the number of outputs (or, equivalently the number of gates) of level $\ell$. \footnote{In the case of binary circuits, it is widely known that any binary gate $G$ can be constructed as a degree two polynomial. Indeed, any gate might be associated to the polynomial $p(x,y) = G(0,0)(x-1)(y-1)+G(0,1)(x-1)y+G(1,0)x(y-1)+G(1,1)xy$ which identical to $G(x,y)$ when $x,y\in\bits$.}
+Each level $i \in[1,d]$ is a depth-1 circuit $C_i:\Z_p^{m_{i}} \to \Z_p^{n_i}$, where $m_i \in\mathbb{N}$ is the number of inputs of level $i$ and $n_i \in\mathbb{N}$ is the number of outputs (or, equivalently the number of gates) of level $i$. %\footnote{In the case of binary circuits, it is widely known that any binary gate $G$ can be constructed as a degree two polynomial. Indeed, any gate might be associated to the polynomial $p(x,y) = G(0,0)(x-1)(y-1)+G(0,1)(x-1)y+G(1,0)x(y-1)+G(1,1)xy$ which identical to $G(x,y)$ when $x,y\in\bits$.}
 For each level $\ell$ it must hold that $\vecb{w}_\ell=\vecb{p}_\ell(\vecb{w}_{\ell-1})$ is the vector of outputs of all gates at level $\ell$ when its input is $\vecb{w}_{\ell-1}$.
 W.l.o.g.~we assume that the outputs of level $\ell-1$ are all the inputs of level $\ell$, since we might add identity gates. For example, suppose that $x_3$ is an input of level $d-1$, then we add an identity gate at level $d$ and thus $\vecb{p}_d=(\ldots,x_3,\ldots)$.
  Thereby, it must hold that $ m_\ell = n_{\ell-1}$ and that for every $\vecb{x}\in\Z_p^m$
@@ -61,20 +59,20 @@ We work on asymmetric bilinear groups and our construction is built from the fol
 \begin{enumerate}
 	\item Commitment keys are matrices over one of the base groups $$ck=[\matr{G}_0\cat\matr{G}_1]_s\in\GG_s^{k\times(m+r)}.$$
 	\item Commitments are defined by $\Com_{ck}(\vecb{x};\vecb{r})=[\matr{G}_0]_s\vecb{x}+[\matr{G}_1]_s\vecb{r}$.		\item Whenever $k=m+r$, $\Com$ defines perfectly binding commitments (or equivalently $\matr{G}$ is invertible) and 	                   there is a QA-NIZK AoK of an opening. In this case we will say that is a knowledge commitment and write $\mathsf{KCom}$ instead of $\Com$.
-\item One might sample $ck$ together wit a trapdoor $t$ which allows to decide whether some commitment opens to $0$ or not. {\color{red} At some point we might need to check which of the commitments $[\vecb{c}_d]_s,\ldots,[\vecb{c}_0]_s$ does not open to $\vecb{\vecb{w}_\ell}$.  I'm not sure if this is necessary or not.}
+\item One might sample $ck$ together wit a trapdoor $t$ which allows to decide whether some commitment opens to $0$ or not. {\color{red} At some point we might need to check which of the commitments $[\vecb{c}_d]_s,\ldots,[\vecb{c}_0]_s$ does not open to $\vecb{\vecb{w}_\ell}$.  I'm not sure if this is necessary or not. Answer: yes, is necessary. The distribution for which one can prove soundness at level $i$ is incompatible with the distribution for proving soundness at level $i+1$}
 	\item there is a computationally indistinguishable way of sampling the commitment keys where $\mathrm{Im}(\matr{G}_0)\subseteq\mathrm{Im}\mathrm(\matr{G}_1)$. 
 \end{enumerate}
 \item A constant size QA-NIZK argument for the following language
 $$
-\mathcal{L}_{\mathsf{deg}\mbox{-}2,ck,ck'}(\vecb{p}):=\left\{[\vecb{c}]_s,[\vecb{c}']_s:
+\mathsf{Depth1}_{ck,ck'}(C):=\left\{[\vecb{c}]_s,[\vecb{c}']_s:
 \begin{array}{l}
 		\text{knowledge of } \vecb{x} \text{ s.t. }
 		{[\vecb{c}]_1=\Com_{ck}(\vecb{x})}
 		\Longrightarrow\\
-		{[\vecb{c}']_1=\mathsf{Com}_{ck'}(\vecb{p}(\vecb{x}))}
+		{[\vecb{c}']_1=\mathsf{Com}_{ck'}(C(\vecb{x}))}
 	\end{array}\right\},
 $$
-for some $\vecb{p}\in\Z_p^n[X_1,\ldots,X_m]$ of degree at most 2. The commitments keys are of size $ck\in\GG_s^{k\times(m+r)},ck'\in\GG_s^{k\times(n+r)}$ and $k$ is a constant polynomial in the security parameter (independent of both $m$ and $n$).
+for some circuit $C:\Z_p^m\to \Z_p^n$ of depth 1. The commitments keys are of size $ck\in\GG_s^{k\times(m+r)},ck'\in\GG_s^{k\times(n+r)}$ and $k$ is a constant polynomial in the security parameter (independent of both $m$ and $n$).
 
 
 {\color{red} I don't know if it would be a good idea to introduce a notion of conditional argument (or proof) of knowledge, where the soundness reduction has access to an opening of the first commitment.}
@@ -82,14 +80,55 @@ for some $\vecb{p}\in\Z_p^n[X_1,\ldots,X_m]$ of degree at most 2. The commitment
 \end{enumerate}
 
 Lets quickly describe how our proof system is built from this primitives. The CRS is composed by the commitment key $ck_\mathsf{PoK}$ for perfectly binding commitments (i.e.~$k=m+r$) and by the CRS $\crs_\mathsf{PoK}$ for proving knowledge of an opening of these commitments.
-. It also contains commitment keys $ck_0\ldots,ck_d$ and CRS's $\crs_1,\ldots,\crs_d$ for proving that $w_1=p_1(w_0),\ldots,w_d=p_d(w_{d-1})$ --- i.e.~proving membership in $\mathcal{L}_{\mathsf{deg}\mbox{-}2,ck_{0},ck_1}(\vecb{p}_1),\allowbreak\ldots,\allowbreak\mathcal{L}_{\mathsf{deg}\mbox{-}2,ck_{d-1},ck_d}(\vecb{p}_d)$ --- respectively. The commitment keys define commitments of size $k=r+1=O(1)$, i.e.~independent of the size of the input, and for $ck_d$, $k=m+r=r+1$ ($m=1$ since there is a unique output) and define perfectly binding commitments. Finally, the CRS contains $\crs_\mathsf{lin}$ for proving membership in two different a linear spaces defined later.
+. It also contains commitment keys $ck_0\ldots,ck_d$ and CRS's $\crs_1,\ldots,\crs_d$ for proving that $\vecb{z}_1=C_1(\vecb{z}_0),\ldots,\vecb{z}_d=C_d(\vecb{z}_{d-1})$ --- i.e.~proving membership in $\mathsf{Depth1}_{ck_{0},ck_1}(C_1),\allowbreak\ldots,\allowbreak\mathsf{Depth1}_{ck_{d-1},ck_d}(C_d)$ --- respectively. The commitment keys define commitments of size $k=r+1=O(1)$, i.e.~independent of the size of the input, and for $ck_d$, $k=m+r=r+1$ ($m=1$ since there is a unique output) and define perfectly binding commitments. Finally, the CRS contains $\crs_\mathsf{lin}$ for proving membership in two different a linear spaces defined later.
 
-Given some $\vecb{x}$ such that $C(\vecb{x})= 1$, the prover computes the proof as follows. It computes a knowledge commitment $[\vecb{c}]_1\gets\mathsf{KCom}_{ck_\mathsf{AoK}}(\vecb{x}$), together with $\pi$ an AoK of $\vecb{x}$. It computes constant-size commitments $[\vecb{c}_\ell]_1\gets\Com_{ck_\ell}(\vecb{p}_\ell\circ\ldots\circ\vecb{p}_0(\vecb{x}))$  with proofs $\pi_\ell$ that $([\vecb{c}_{\ell-1}]_1,[\vecb{c}_\ell]_1)\in\mathcal{L}_{\mathsf{deg}\mbox{-}2,ck_{\ell-1},ck_\ell}(\vecb{p}_\ell)$, for $1\leq \ell\leq d$. It additionally computes $[\vecb{c}_{0}]_1\gets\Com_{ck_{0}}(\vecb{x})$ and provides a proof $\theta_\mathsf{lin}$ that $[\vecb{c}]_1$ and $[\vecb{c}_{0}]_1$ can be opened to the same value and $\pi_\mathsf{lin}$ that $[\vecb{c}_d]_1$  can be opened to 1 (both $\theta_\mathsf{lin}$ and $\pi_\mathsf{lin}$ can be easily constructed from a QA-NIZK argument of membership in a linear space as shown in \cite{AC:GonHevRaf15}).
+Given some $\vecb{x}$ such that $C(\vecb{x})= 1$, the prover computes the proof as follows. It computes a knowledge commitment $[\vecb{c}]_1\gets\mathsf{KCom}_{ck_\mathsf{PoK}}(\vecb{x}$), together with $\pi$ an AoK of $\vecb{x}$. It computes constant-size commitments $[\vecb{c}_i]_1\gets\Com_{ck_i}(C_i\circ\ldots\circ C_1(\vecb{x}))$  with proofs $\pi_i$ that $([\vecb{c}_{i-1}]_1,[\vecb{c}_i]_1)\in\mathsf{Depth1}_{ck_{i-1},ck_i}(C_i)$, for $i\in[1,d]$. It additionally computes $[\vecb{c}_{0}]_1\gets\Com_{ck_{0}}(\vecb{x})$ and provides a proof $\theta_\mathsf{lin}$ that $[\vecb{c}]_1$ and $[\vecb{c}_{0}]_1$ can be opened to the same value and $\pi_\mathsf{lin}$ that $[\vecb{c}_d]_1$  can be opened to 1 (both $\theta_\mathsf{lin}$ and $\pi_\mathsf{lin}$ can be easily constructed from a QA-NIZK argument of membership in a linear space as shown in \cite{AC:GonHevRaf15}).
 
 An intuitive reason of why this proof system is sound is as follows. Suppose an adversary produces a proof $\pi$ for a circuit $C$ such that is impossible to extract from $\pi$ some $\vecb{x}$ s.t.~$C(\vecb{x})=1$. In particular, if $\vecb{x}$ be the opening of $[\vecb{c}]_1$ --- which can be extracted from $\pi_\mathsf{PoK}$ --- then $C(\vecb{x})=0$. Soundness of $\theta_\mathsf{lin}$ implies that $[\vecb{c}]_1$ and $[\vecb{c}_{0}]_1$ share a common opening. Since $[\vecb{c}]_1$ is perfectly binding, the unique opening they can share is $\vecb{x}$ and thus $[\vecb{c}_{0}]_1=\Com_{ck_{0}}(\vecb{x})$. Similarly, $[\vecb{c}_d]_1$ has a unique opening since $m=1$ and thus $k=m+r$. Then by the soundness of $\pi_\mathsf{lin}$, this unique opening must be equal to 1.
 Let $\vecb{w}_\ell := \vecb{p}_\ell\circ\ldots\circ \vecb{p}_1(\vecb{x})$, $1\leq\ell\leq d$, and let $\ell^*$ the lowest index between $1$ and $d$ such that $[\vecb{c}_{\ell^*}]\neq\Com_{ck_{\ell^*}}(\vecb{w}_{\ell^*};\vecb{\rho})$ for every $\vecb{\rho}$, but $[\vecb{c}_{\ell^*-1}]_1 = \Com_{ck_{\ell^*-1}}(\vecb{w}_{\ell^*-1})$. Note that such $\ell^*$ exists since $[\vecb{c}_0] = \Com_{ck_0}(\vecb{w}_0)$ and thus, if there is no other suitable index, at least for $\ell^*=d$ we get $[\vecb{c}_d]\neq\Com_{ck_0}(0)=\Com_{ck_d}(\vecb{w}_d)$ (by soundness of $\pi_\mathsf{lin}$) and $[\vecb{c}_{d-1}]_1=\Com_{ck_{d-1}}(\vecb{w}_{d-1})$. Hence, from $[\vecb{c}]_1$ we can extract $\vecb{x}$ from which we can compute $\vecb{w}_{\ell^*-1} = \vecb{p}_{\ell^*-1}\circ\ldots\circ \vecb{p}_{1}(\vecb{x})$, which is an opening of $[\vecb{c}_{\ell^*-1}]_1=\Com_{ck_{\ell^*-1}}(\vecb{w}_{\ell^*-1})$, and thus $([\vecb{c}_{\ell^*-1}],[\vecb{c}_{\ell^*}])\notin\mathcal{L}_{\mathsf{deg}\mbox{-}2,ck_{\ell^*-1},ck_{\ell^*}}(\vecb{p}_{\ell^*})$ which violates the soundness of $\pi_{\ell^*}$.
 
 \section{The primitives}
+
+\subsection{Argument of Knowledge Transfer}
+
+\begin{lemma}
+Let $\matr{G}_0\gets \mathcal{G}_{k_1,k_1+1}$ and $\matr{H}\gets\mathcal{H}_{k_2,m}$ and $\matr{A}\gets\mathcal{U}_{k',k}$ such that the $\mathcal{G}_{k_1,k_1+1}^\top\mbox{-}\skermdh$ is hard. Consider also $\matr{G} = (\matr{G}_0|\matr{G}_0\matr{R})$, for $\matr{R}\gets\Z_q^{(k_1+1)\times (m-k_1-1)}$. Define $\matr{M} = \smallpmatrix{\matr{G}\\\matr{H}}$ and, given matrices $\matr{K} \in\Z_q^{(k_1+1)\times (k_1+k_2)}\times \Z_q^{(k_1+1)\times k_2}$ and $\matr{A}\in\Z_q^{k\times (k_1+1)}$, define $\matr{M}_\matr{K}:=\matr{K}\matr{M}$ and $\matr{A}_\matr{K} = \matr{A}\matr{K}$. 
+
+For any PPT adversary $\advA$ there exists adversaries $\advB_1$ and $\advB_2$ such that
+\begin{align*}
+&\Pr
+\left[\begin{array}{l}
+	(
+		[\vecb{c}]_\gamma,
+		[\vecb{d}]_\gamma,
+		[\vecb{\pi}]_{\gamma},
+		\vecb{w}^*
+	)
+		\gets \advA
+		(
+			[\matr{G}]_{\gamma},
+			[\matr{H}]_{\gamma},
+			[\matr{M}_\matr{K}]_\gamma,
+			[\matr{A}]_{2-\gamma},
+			[\matr{A}_{\matr{K}}]_{2-\gamma}
+		):\\
+		\vecb{c} = \matr{G}\vecb{w}^*\wedge
+		\matr{A}_\matr{K}\smallpmatrix{\vecb{c}\\\vecb{d}} = \matr{A}\vecb{\pi}\wedge
+		\vecb{d} \neq \matr{G}\vecb{w}^*
+\end{array}\right]\\
+&\leq
+\adv_{\mathcal{G}_{k_1,k_1+1}\mbox{-}\kermdh_{\GG_\gamma}}(\advB_1) +
+\adv_{\mathcal{U}_{k,k_1}\mbox{-}\kermdh_{\GG_{2-\gamma}}}(\advB_2),
+\end{align*}
+where the coins are taken from $\matr{G}_0\gets\mathcal{G}_{k_1,k_1+1}, \matr{R}\gets\Z_q^{(k_1+1)\times(m-k_1-1)}, \matr{H}\gets\mathcal{H}_{k_2,m}, \matr{A}\gets\mathcal{U}_{k,k_1},\matr{K}\gets\Z_q^{k\times(k_1+k_2)}$, and the random choises of the adversary.
+\end{lemma}
+
+\begin{proof}
+We distinguish two cases: i) $\vecb{\pi} = \matr{K}\smallpmatrix{\vecb{c}\\\vecb{d}}$ and ii) $\vecb{\pi }\neq \matr{K}\smallpmatrix{\vecb{c}\\\vecb{d}}$. We construct adversaries $\advB_1,\advB_2$ such that $\advB_1$ will be sucessfull conditioned on i), while $\advB_2$ will be sucessfull conditioned on ii).
+
+Adversary $\advB_1$ recieves as input two matrices $[\matr{G}_0]_1\in\GG_1^{k_1\times k_1+1}$ and $[\matr{G}_0]_2\in\GG_2^{k_1\times k_1+1}$, where $\matr{G}_0\gets \mathcal{G}_{k_1,k_1+1}$. It samples $\matr{G}_{\matr{K},0} \gets \Z_q^{k\times (k_1+1)}$,  $\matr{K}_2\gets\Z_q^{k\times k_2}$.
+It samples by itself $\matr{H}\gets\mathcal{H}_{k_2,m}$ and 
+\end{proof}
 
 \subsection{Homomorphic Commitments.}
 Both Groth-Sahai and Pedersen commitments are special cases of the following general commitment scheme
@@ -100,7 +139,18 @@ Both Groth-Sahai and Pedersen commitments are special cases of the following gen
 Groth-Sahai commitments based on the $\dist_{k,r}$-MDDH assumption correspond to the case $m=1$, $\matr{G}_1\gets\dist_{k,r}$ and $\matr{G}_0\in\Z_q^k$ such that $\matr{G}_0\notin\mathrm{Im}(\matr{G}_1)$. Pedersen commitments correspond to the case $k=r=1$ and $\matr{G}\gets\Z_q^{1\times(m+1)}$, which defines perfectly hiding commitments.
 
 {\color{red} Generalize to any Matrix Assumption?}
-We will consider the case $\matr{G}\gets\Z_q^{k\times r}$. {\color{red} I must say something about somewhere statistically binding commitments. Although here I never change the distribution of $ck$ for making it perfectly binding at some fix coordinate.} 
+We will consider the case $\matr{G}\in\Z_q^{(k+r)\times (m+r)}$ where $k$ is a constant (typically 2). The aditional $r$ rows of $\matr{G}$ will enable us to sample a trapdoor for checking if a given commitment opens to zero, while $[\matr{G}]_1$ might still be sampled from computationally indisintguishable distributions. 
+
+{\color{red} I must say something about somewhere statistically binding commitments. Although here I never change the distribution of $ck$ for making it perfectly binding at some fix coordinate.} 
+We will be using a similar commitment scheme defined as follows:
+
+\begin{definition}[0-Testable commitments]
+The $(k+r)$-dimensional super commitments in the group $\GG_\gamma$ is specified by the following algorithms $\ZC:=(\ZC.\algK,\ZC.\Com,\ZC.\mathsf{Test0})$
+\begin{description}
+\item[$\ZC.\algK(gk,m,r,\dist_{k+r,m+r})$:] is a randomized algorithm, which on input the group key $gk$, natural numbers $m,r$, and the description of some matrix distributions $\dist_{k+r,m+r}$ outputs a commitment key $ck := [\matr{G}]_\gamma$, where $\matr{G}\gets\dist_{k+r,m+r}$.
+\item[$\ZC.\algK$]
+\end{description}
+\end{definition}
 This commitments clearly satisfy properties (a) and (b). We now proceed to prove the also satisfy (c), (d), and (e).
 \begin{enumerate}[label=(\alph*)]
 \setcounter{enumi}{2}
